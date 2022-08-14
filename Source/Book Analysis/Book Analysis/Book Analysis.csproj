@@ -15,9 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspose.PDF" Version="22.3.0" />
     <PackageReference Include="MaterialSkin.NET5" Version="1.0.0" />
     <PackageReference Include="NEST" Version="7.17.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="RestSharp" Version="108.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +35,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
