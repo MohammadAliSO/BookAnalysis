@@ -1,19 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Book_Analysis.Models;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Book_Analysis.Classes
 {
     public class Analysis
     {
+        public string[] KeyWordCalculate(string text , string DocSpliter="\n")
+        {
+            var contents = text.Split(DocSpliter);
+
+            List<BookInfoModel> listdocs = new List<BookInfoModel>();
+            Analysis analysis = new Analysis();
+            foreach (string content in contents)
+            {
+
+                var content1 = analysis.PersianToEnglishNumber(content);
+                content1 = analysis.RemovePunctuations(content1);
+                content1 = analysis.RemoveNumber(content1);
+                content1 = analysis.RemoveEnterLine(content1);
+
+                if (content1 == "") continue;
+                listdocs.Add(new BookInfoModel
+                {
+                    content = content1
+                });
+            }
+
+            var ids = ElasticSearchHelper.InsertData(listdocs.ToArray(), "keywordanalysis");
+
+            Dictionary<string, double> keywords = new();
+            foreach (var id in ids)
+            {
+                var keyp = ElasticSearchHelper.TermVectors(contents.Count(), id, true, true);
+                foreach (var k in keyp)
+                {
+                    if (keywords.ContainsKey(k.Key))
+                        keywords[k.Key] += k.Value;
+                    else keywords[k.Key] = k.Value;
+
+                }
+                ElasticSearchHelper.DeleteDoc("keywordanalysis", id);
+
+            }
+            var keys = keywords.OrderByDescending(a => a.Value).Select(a => a.Key).Take(10).ToArray();
+            return keys;
+
+        }
         public List<List<bool>> Validation(string indexName)
         {
-            var Data= ElasticSearchHelper.SearchAlltt(indexName);
+            var Data = ElasticSearchHelper.SearchAll(indexName);
             var countData = Data.Count;
-            var splitData= Data.Chunk((countData/5)+1).ToList();
+            var splitData = Data.Chunk((countData / 5) + 1).ToList();
             List<List<bool>> CrossVal = new List<List<bool>>();
             //List<> Data = new List<>();
             //List<> testData = new List<>();
@@ -26,17 +64,17 @@ namespace Book_Analysis.Classes
                 var splitTest = split.ToDictionary(a => a.Key, a => a.Value);
                 foreach (var testD in splitTest)
                 {
-                    var result=ElasticSearchHelper.MoreLikeThisQuery(testD.Value.content);
-                    
+                    var result = ElasticSearchHelper.MoreLikeThisQuery(testD.Value.content);
+
                     if (result != null)
                     {
                         result.RemoveAt(result.FindIndex(a => splitTest.ContainsKey(a.id)));
-                         var resOrd=result.OrderByDescending(a => a.score).ToList();
+                        var resOrd = result.OrderByDescending(a => a.score).ToList();
                         foreach (var res in resOrd)
                         {
                             if (splitTest.ContainsKey(res.id)) continue;
 
-                            if(res.topic == testD.Value.topic) valList.Add(true);
+                            if (res.topic == testD.Value.topic) valList.Add(true);
                             else valList.Add(false);
                             break;
                         }
@@ -46,7 +84,7 @@ namespace Book_Analysis.Classes
 
                 CrossVal.Add(valList);
             }
-            
+
 
             return CrossVal;
         }
@@ -67,6 +105,38 @@ namespace Book_Analysis.Classes
             return sb.ToString();
         }
 
+        public string PersianToEnglishNumber(string persianStr)
+        {
+            Dictionary<char, char> LettersDictionary = new Dictionary<char, char>
+            {
+                ['۰'] = '0',
+                ['۱'] = '1',
+                ['۲'] = '2',
+                ['۳'] = '3',
+                ['۴'] = '4',
+                ['۵'] = '5',
+                ['۶'] = '6',
+                ['۷'] = '7',
+                ['۸'] = '8',
+                ['۹'] = '9'
+            };
+            foreach (var item in LettersDictionary)
+            {
+                persianStr = persianStr.Replace(item.Key, item.Value);
+            }
+            return persianStr;
+        }
 
+        public string RemoveNumber(string str)
+        {
+            return Regex.Replace(str, @"[\d-]", string.Empty); ;
+        }
+
+        public string RemoveEnterLine(string str)
+        {
+            return str.Replace("\n", "");
+            ;
+        }
     }
 }
+

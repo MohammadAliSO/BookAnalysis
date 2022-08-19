@@ -17,8 +17,49 @@ namespace Book_Analysis.Classes
         }
 
 
+        public static long GetCount(string Index)
+        {
+            var elasticClient = CreateConnection();
 
-        public static Dictionary<string, BookInfoModel> SearchAlltt(string indexname)
+            var count = elasticClient.Count<BookInfoModel>(a => a.Index(Index));
+
+
+            return count.Count;
+        }
+        public static Dictionary<string, double> TermVectors(long docCount, string id , bool ttfMode = true ,bool thisTextMode = false)
+        {
+            var elasticClient = CreateConnection();
+
+            var termVectorResponse = elasticClient.TermVectors<BookInfoModel>(t => t.Index(thisTextMode ? "keywordanalysis" : Global.IndexElastic)
+    //.Document(myDocument)
+    .Id(new Id(id)) //you can specify document by id as well
+    .TermStatistics()
+    .Fields(f => f.content));
+
+
+
+            Dictionary<string, double> keywords = new();
+            foreach (var item in termVectorResponse.TermVectors)
+            {
+
+                //var topTerms = item.Value.Terms.OrderByDescending(x => x.Value.TotalTermFrequency).Take(10).ToList();
+
+                foreach (var term in item.Value.Terms)
+                {
+                    var tf = ttfMode? term.Value.TotalTermFrequency  : term.Value.TermFrequency;
+
+                    var tfidf = tf * (Math.Log(docCount / (term.Value.DocumentFrequency)));
+                    keywords[term.Key] = tfidf;
+                }
+
+
+            }
+
+
+            return keywords;
+        }
+
+        public static Dictionary<string, BookInfoModel> SearchAll(string indexname)
         {
 
             ConcurrentDictionary<string, BookInfoModel> result = new ConcurrentDictionary<string, BookInfoModel>();
@@ -76,11 +117,11 @@ namespace Book_Analysis.Classes
             {
                 throw exception;
             }
-            
 
-            return result.ToDictionary(a=>a.Key,a=>a.Value);
+
+            return result.ToDictionary(a => a.Key, a => a.Value);
         }
-        public static Dictionary<string, BookInfoModel> SearchAll(string indexname)
+        public static Dictionary<string, BookInfoModel> SearchAllmax10(string indexname)
         {
 
             //string url_req = "http://localhost:9200/book/_search";
@@ -120,7 +161,7 @@ namespace Book_Analysis.Classes
         {
             Analysis analysis = new Analysis();
             text = analysis.RemovePunctuations(text);
-            text = text.Replace("\n","");
+            text = text.Replace("\n", "");
             //var elasticClient = CreateConnection();
             //var response = elasticClient.Search<BookInfoModel>(s => s
             //.Index(Global.IndexElastic)
@@ -151,9 +192,10 @@ namespace Book_Analysis.Classes
             var request = new RestRequest("", Method.Get);
             request.AddHeader("Content-Type", "application/json");
 
-            string body = "{\r\n    \"query\": {\r\n        \"dis_max\": {\r\n            \"queries\": [{\r\n                \"more_like_this\": {\r\n                    \"fields\": [\r\n                        \"topic\"\r\n                    ],\r\n                    \"minimum_should_match\": 1,\r\n                    \"min_term_freq\": 1,\r\n                    \"max_query_terms\": 5000,\r\n                    \"min_doc_freq\": 1,\r\n                    \"boost\": 2.0,\r\n                    \"analyzer\": \"persian\",\r\n                    \"include\": true,\r\n                    \"like\": \"@text\"\r\n                }},{\r\n                \"more_like_this\": {\r\n                    \"fields\": [\r\n                        \"content\"\r\n                    ],\r\n                    \"minimum_should_match\": 1,\r\n                    \"min_term_freq\": 1,\r\n                    \"max_query_terms\": 5000,\r\n                    \"min_doc_freq\": 1,\r\n                    \"boost\": 1.0,\r\n                    \"boost_terms\": 2.0,\r\n                    \"analyzer\": \"persian\",\r\n                    \"include\": true,\r\n                    \"like\": \"@text\"\r\n                }}\r\n            ]\r\n        }\r\n    }\r\n}";
+
+            string body = "{\r\n    \"query\": {\r\n        \"dis_max\": {\r\n            \"queries\": [{\r\n                \"more_like_this\": {\r\n                    \"fields\": [\r\n                        \"topic\"\r\n                    ],\r\n                    \"minimum_should_match\": 1,\r\n                    \"min_term_freq\": 1,\r\n                    \"max_query_terms\": 1000,\r\n                    \"min_doc_freq\": 1,\r\n                    \"boost\": 2.0,\r\n                    \"analyzer\": \"persian\",\r\n                    \"include\": true,\r\n                    \"like\": \"@text\"\r\n                }},{\r\n                \"more_like_this\": {\r\n                    \"fields\": [\r\n                        \"content\"\r\n                    ],\r\n                    \"minimum_should_match\": 1,\r\n                    \"min_term_freq\": 1,\r\n                    \"max_query_terms\": 1000,\r\n                    \"min_doc_freq\": 1,\r\n                    \"boost\": 1.0,\r\n                    \"boost_terms\": 2.0,\r\n                    \"analyzer\": \"persian\",\r\n                    \"include\": true,\r\n                    \"like\": \"@text\"\r\n                }}\r\n            ]\r\n        }\r\n    }\r\n}";
             //string body = "{\r\n    \"query\": {\r\n        \"dis_max\": {\r\n            \"queries\": [{\r\n                \"more_like_this\": {\r\n                    \"fields\": [\r\n                        \"header_topic\"\r\n                    ],\r\n                    \"minimum_should_match\": 1,\r\n                    \"min_term_freq\": 1,\r\n                    \"max_query_terms\": 200,\r\n                    \"min_doc_freq\": 1,\r\n                    \"boost\": 1.0,\r\n                    \"boost_terms\": 3.0,\r\n                    \"analyzer\": \"persian\",\r\n                    \"include\": true,\r\n                    \"like\": \"@text\"\r\n                }},{\r\n                \"more_like_this\": {\r\n                    \"fields\": [\r\n                        \"content\"\r\n                    ],\r\n                    \"minimum_should_match\": 1,\r\n                    \"min_term_freq\": 1,\r\n                    \"max_query_terms\": 200,\r\n                    \"min_doc_freq\": 1,\r\n                    \"boost\": 2.0,\r\n                    \"analyzer\": \"persian\",\r\n                    \"include\": true,\r\n                    \"like\": \"@text\"\r\n                }}\r\n            ]\r\n        }\r\n    }\r\n}";
-            //string body = "{\r\n    \"query\":{\r\n       \"more_like_this\":{\r\n          \"fields\":[\r\n             \"content\"\r\n             ],\r\n          \"like\":\"@text\",\r\n\r\n          \"min_term_freq\":1,\r\n          \"max_query_terms\":100\r\n       }\r\n    }\r\n  }";
+            //string body = "{\r\n    \"query\":{\r\n       \"more_like_this\":{\r\n          \"fields\":[\r\n             \"content\"\r\n             ],\r\n          \"like\":\"@text\",\r\n\r\n          \"min_term_freq\":1,\r\n          \"max_query_terms\":10000\r\n       }\r\n    }\r\n  }";
             body = body.Replace("@text", text);
             request.AddParameter("application/json", body, ParameterType.RequestBody);
             RestResponse response = client.Execute(request);
@@ -182,7 +224,7 @@ namespace Book_Analysis.Classes
 
         }
 
-        public static void InsertData(BookInfoModel[] documents)
+        public static string[] InsertData(BookInfoModel[] documents , string IndexName)
         {
             //         var documents = new[]
             //{
@@ -199,31 +241,45 @@ namespace Book_Analysis.Classes
             //    await elasticClient.IndexAsync(document, idx => idx.Index(Config.All.ElasticSearch.Index));
             //    response =  elasticClient.CreateDocumentAsync<BookInfoModel>(document);
             //}
-            var response = elasticClient.Bulk(s => s.Index(Global.IndexElastic).CreateMany(documents).Refresh(Refresh.WaitFor));
+
+
+            List<string> ids = new List<string>();  
+            var docsList = documents.Chunk(9000).ToArray();
+            foreach (var docs in docsList)
+            {
+
+                var response = elasticClient.Bulk(s => s.Index(IndexName).CreateMany(docs).Refresh(Refresh.WaitFor));
+                ids.AddRange(response.Items.Select(a => a.Id));
+            }
+            return ids.ToArray();
 
         }
 
         public static void CreateIndex(string name)
         {
-            using (var client = new HttpClient())
+            using (var client1 = new RestClient($"{Config.All.ElasticSearch.Address}/bookanalysis_{name}"))
             {
-                client.BaseAddress = new Uri(Config.All.ElasticSearch.Address);
-                var response1 = client.PutAsync($"bookanalysis_{name}", null).Result;
-                if (response1.IsSuccessStatusCode)
+
+                var request1 = new RestRequest($"{Config.All.ElasticSearch.Address}/bookanalysis_{name}", Method.Put);
+                request1.AddHeader("Content-Type", "application/json");
+                request1.AddParameter("application/json", "{\r\n  \"settings\": {\r\n    \"index.mapping.ignore_malformed\": true,\r\n    \"analysis\": {\r\n      \"char_filter\": {\r\n        \"zero_width_spaces\": {\r\n          \"type\": \"mapping\",\r\n          \"mappings\": [\r\n            \"\\u200C=>\\u0020\",\r\n            \"٠ => 0\",\r\n            \"١ => 1\",\r\n            \"٢ => 2\",\r\n            \"٣ => 3\",\r\n            \"٤ => 4\",\r\n            \"٥ => 5\",\r\n            \"٦ => 6\",\r\n            \"٧ => 7\",\r\n            \"٨ => 8\",\r\n            \"٩ => 9\"\r\n          ]\r\n        },\r\n        \"number_filter\":{  \r\n            \"type\":\"pattern_replace\",\r\n            \"pattern\":\"\\\\d+\",\r\n            \"replacement\":\"\"\r\n         }\r\n      },\r\n      \"filter\": {\r\n        \"persian_stop\": {\r\n          \"type\": \"stop\",\r\n          \"stopwords\": \"_persian_\"\r\n        }\r\n      },\r\n      \"analyzer\": {\r\n        \"rebuilt_persian\": {\r\n          \"tokenizer\": \"standard\",\r\n          \"char_filter\": [\r\n            \"number_filter\",\r\n            \"zero_width_spaces\"\r\n          ],\r\n          \"filter\": [\r\n            \"lowercase\",\r\n            \"decimal_digit\",\r\n            \"arabic_normalization\",\r\n            \"persian_normalization\",\r\n            \"persian_stop\"\r\n          ]\r\n        }\r\n      }\r\n    },\r\n    \"index\" : {\r\n        \"number_of_shards\":3,\r\n        \"number_of_replicas\" : 1\r\n    }\r\n  }\r\n}", ParameterType.RequestBody);
+                var res1 = client1.Execute(request1);
+
+                if (res1.IsSuccessful)
                 {
                     MessageBox.Show($"{name} index created", "CreateIndex", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    using (var client1 = new RestClient($"{Config.All.ElasticSearch.Address}/bookanalysis_{name}/_mapping"))
+                    using (var client = new RestClient($"{Config.All.ElasticSearch.Address}/bookanalysis_{name}/_mapping"))
                     {
 
                         var request = new RestRequest($"{Config.All.ElasticSearch.Address}/bookanalysis_{name}/_mapping", Method.Post);
                         request.AddHeader("Content-Type", "application/json");
-                        request.AddParameter("application/json", "{\r\n  \"properties\": {\r\n    \"content\": {\r\n      \"type\": \"text\",\r\n      \"term_vector\": \"with_positions_offsets_payloads\",\r\n      \"store\": true,\r\n      \"analyzer\": \"persian\"\r\n    },\r\n    \"header\": {\r\n      \"type\": \"text\",\r\n      \"analyzer\": \"persian\",\r\n      \"term_vector\": \"with_positions_offsets_payloads\",\r\n      \"store\": true,\r\n      \"fields\": {\r\n        \"keyword\": {\r\n          \"type\": \"keyword\"\r\n        }\r\n      }\r\n    },\r\n    \"topic\": {\r\n      \"type\": \"text\",\r\n      \"analyzer\": \"persian\",\r\n      \"term_vector\": \"with_positions_offsets_payloads\",\r\n      \"store\": true,\r\n      \"fields\": {\r\n        \"keyword\": {\r\n          \"type\": \"keyword\"\r\n        }\r\n      }\r\n    },\r\n    \"header_topic\": {\r\n      \"type\": \"text\",\r\n      \"analyzer\": \"persian\",\r\n      \"term_vector\": \"with_positions_offsets_payloads\",\r\n      \"store\": true,\r\n      \"fields\": {\r\n        \"keyword\": {\r\n          \"type\": \"keyword\"\r\n        }\r\n      }\r\n    },\r\n    \"releasedate\": {\r\n      \"type\": \"date\"\r\n    },\r\n    \"eventdate\": {\r\n      \"type\": \"date\"\r\n    },\r\n    \"bookname\": {\r\n      \"type\": \"text\",\r\n      \"fields\": {\r\n        \"keyword\": {\r\n          \"type\": \"keyword\"\r\n        }\r\n      }\r\n    }\r\n  }\r\n}", ParameterType.RequestBody);
+                        request.AddParameter("application/json", "{\r\n  \"properties\": {\r\n    \"content\": {\r\n      \"type\": \"text\",\r\n      \"term_vector\": \"with_positions_offsets_payloads\",\r\n      \"store\": true,\r\n      \"analyzer\": \"persian\"\r\n    },\r\n    \"topic\": {\r\n      \"type\": \"text\",\r\n      \"analyzer\": \"persian\",\r\n      \"term_vector\": \"with_positions_offsets_payloads\",\r\n      \"store\": true,\r\n      \"fields\": {\r\n        \"keyword\": {\r\n          \"type\": \"keyword\"\r\n        }\r\n      }\r\n    },\r\n    \"publishdate\": {\r\n      \"type\": \"date\"\r\n    },\r\n    \"eventdate\": {\r\n      \"type\": \"date\"\r\n    },\r\n    \"bookname\": {\r\n      \"type\": \"text\",\r\n      \"fields\": {\r\n        \"keyword\": {\r\n          \"type\": \"keyword\"\r\n        }\r\n      }\r\n    }\r\n  }\r\n}", ParameterType.RequestBody);
 
-                        var res = client1.Execute(request);
+                        var res = client.Execute(request);
                     }
                 }
                 else
-                    MessageBox.Show($"{response1.ReasonPhrase}", "CreateIndex", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"{res1.ErrorMessage}", "CreateIndex", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             }
         }
@@ -239,6 +295,26 @@ namespace Book_Analysis.Classes
             for (int i = 0; i < Indexes.Count; i++) Indexes[i] = Indexes[i].Replace("bookanalysis_", "");
 
             return Indexes.ToArray();
+        }
+
+        public static bool DeleteDoc(string IndexName, string Id)
+        {
+            var elasticClient = CreateConnection();
+            var result = elasticClient.Delete<BookInfoModel>(Id, a => a.Index(IndexName));
+            return result.IsValid;
+        }
+        public static Dictionary<long, string> Analyser(string text)
+        {
+
+            var elasticClient = CreateConnection();
+            var analyzeResponse = elasticClient.Indices.Analyze(a => a
+                                .Analyzer("standard")
+                                .Text(text));
+
+            //analyzeResponse.Tokens.Select(a=> new  {a.Token ,a.Position}).
+            return analyzeResponse.Tokens.GroupBy(a => a.Token).Select(a => new { token = a.Key, id = a.Max(s => s.Position) }).ToDictionary(a=>a.id,a=>a.token);
+
+
         }
     }
 }
