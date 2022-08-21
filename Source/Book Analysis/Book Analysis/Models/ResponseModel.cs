@@ -6,7 +6,55 @@ using System.Threading.Tasks;
 
 namespace Book_Analysis.Models
 {
-    
+
+    public class Aggregations
+    {
+        public Query query { get; set; }
+    }
+
+    public class Bucket
+    {
+        public string key { get; set; }
+        public int doc_count { get; set; }
+    }
+
+    public class Hits
+    {
+        public Total total { get; set; }
+        public object max_score { get; set; }
+        public List<object> hits { get; set; }
+    }
+
+    public class Query
+    {
+        public int doc_count_error_upper_bound { get; set; }
+        public int sum_other_doc_count { get; set; }
+        public List<Bucket> buckets { get; set; }
+    }
+
+    public class GroupByFieldValue
+    {
+        public int took { get; set; }
+        public bool timed_out { get; set; }
+        public Shards _shards { get; set; }
+        public Hits hits { get; set; }
+        public Aggregations aggregations { get; set; }
+    }
+
+    public class Shards
+    {
+        public int total { get; set; }
+        public int successful { get; set; }
+        public int skipped { get; set; }
+        public int failed { get; set; }
+    }
+
+    public class Total
+    {
+        public int value { get; set; }
+        public string relation { get; set; }
+    }
+
     public class MoreLikeThisQueryResponse
     {
         public int took { get; set; }
@@ -28,13 +76,7 @@ namespace Book_Analysis.Models
 
 
 
-    public class Shards
-    {
-        public int total { get; set; }
-        public int successful { get; set; }
-        public int skipped { get; set; }
-        public int failed { get; set; }
-    }
+
 
     public class Source
     {
@@ -47,11 +89,7 @@ namespace Book_Analysis.Models
         public DateTime eventdate { get; set; }
     }
 
-    public class Total
-    {
-        public int value { get; set; }
-        public string relation { get; set; }
-    }
+
 
 
 }

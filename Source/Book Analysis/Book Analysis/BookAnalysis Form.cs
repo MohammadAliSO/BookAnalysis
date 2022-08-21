@@ -1,6 +1,7 @@
 ﻿using Book_Analysis.Classes;
 using Book_Analysis.Models;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace Book_Analysis;
 
@@ -8,7 +9,9 @@ public partial class Book_Analysis : Form
 {
 
     static string[]? BookDocs;
+    static List<BookInfoModel>? BookDocsEdit;
     static int offsetDoc = 0;
+    static int offsetDocEdit = 0;
     public Book_Analysis()
     {
         InitializeComponent();
@@ -150,19 +153,20 @@ public partial class Book_Analysis : Form
 
             var minRes = disRes.GroupBy(a => a.topic).Select(a => new { tp = a.Key, Avg = a.Sum(s => s.score) }).ToList();
 
-            cbTopicLearn.Items.Clear(); cbTopicLearn.Text = "";
-            cbTopicLearn.DroppedDown = true;
+            lbToicsLearn.Items.Clear(); tbTopicLearn.Text = "";
+            //lbToicsLearn.DroppedDown = true;
 
             if (result != null && result.Count > 0)
             {
                 //cbHeaderLearn.Items.AddRange(result.OrderByDescending(a=>a.score).Take(10).Select((a,b)=> a.header+"("+a.score+")").ToArray());
                 //cbHeaderLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.header_topic.Substring(0, a.header_topic.IndexOf("_")) + "(" + a.score + ")").ToArray());
                 //cbHeaderLearn.SelectedIndex = 0;
-                //cbTopicLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.topic + "(" + a.score + ")").ToArray());
-                //cbTopicLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.header_topic.Substring(a.header_topic.IndexOf("_") + 1) + "(" + a.score + ")").ToArray());
-                cbTopicLearn.Items.AddRange(minRes.OrderByDescending(a => a.Avg).Take(10).Select(a => a.tp + "(" + a.Avg + ")").ToArray());
+                //lbToicsLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.topic + "(" + a.score + ")").ToArray());
+                //lbToicsLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.header_topic.Substring(a.header_topic.IndexOf("_") + 1) + "(" + a.score + ")").ToArray());
+                var listtopic = minRes.OrderByDescending(a => a.Avg).Take(10).Select(a => a.tp + "(" + a.Avg + ")").ToArray();
+                lbToicsLearn.Items.AddRange(listtopic);
 
-                cbTopicLearn.SelectedIndex = 0;
+                tbTopicLearn.Text = listtopic.First();
 
             }
 
@@ -179,9 +183,9 @@ public partial class Book_Analysis : Form
 
 
         cbCategoryLearn.Items.Clear();
-        cbCategoryValidation.Items.Clear();
+
         cbCategoryLearn.Items.AddRange(await ElasticSearchHelper.GetIndex());
-        cbCategoryValidation.Items.AddRange(await ElasticSearchHelper.GetIndex());
+
 
 
     }
@@ -258,12 +262,14 @@ public partial class Book_Analysis : Form
 
     private void btnLearn_Click(object sender, EventArgs e)
     {
-        if (rbReadBookLearn.Checked==true)
+        btnLearn.BackColor = Color.LightGray;
+
+        if (rbReadBookLearn.Checked == true)
         {
 
 
             //var filename = Path.GetFileName(tbBookFile.Text);
-            var topic = cbTopicLearn.Text;
+            var topic = tbTopicLearn.Text;
             //var header = cbHeaderLearn.Text;
 
             var contents = tbContentLearn.Text.Split("@@@@@");
@@ -295,15 +301,17 @@ public partial class Book_Analysis : Form
 
             if (offsetDoc == BookDocs.Length) { btnLearn.Enabled = false; btnReadBook.Enabled = true; return; }
             //tbContentLearn.Text = GetDoc();
+            btnLearn.BackColor = Color.LightGreen;
+
         }
 
-        if (rbImportLearn.Checked==true)
+        if (rbImportLearn.Checked == true)
         {
-            var docs=Global.FileToBookInfoModel(tbPathImportLearn.Text);
+            var docs = Global.FileToBookInfoModel(tbPathImportLearn.Text);
 
-            ElasticSearchHelper.InsertData(docs.ToArray(),Global.IndexElastic);
+            ElasticSearchHelper.InsertData(docs.ToArray(), Global.IndexElastic);
+            btnLearn.BackColor = Color.LightGreen;
         }
-        btnLearn.BackColor = Color.LightGreen;   
 
 
     }
@@ -312,7 +320,8 @@ public partial class Book_Analysis : Form
 
     private void btnRefresh_Click(object sender, EventArgs e)
     {
-        cbTopicLearn.Items.Clear(); cbTopicLearn.Text = "";
+        lbToicsLearn.Items.Clear(); tbTopicLearn.Text = "";
+        lbKeywords.Items.Clear(); lbKeywords.Text = "";
         var result = ElasticSearchHelper.MoreLikeThisQuery(tbContentLearn.Text);
 
         var disRes = result.Select(a => new { a.topic, a.score }).Distinct().ToList();
@@ -323,24 +332,25 @@ public partial class Book_Analysis : Form
             //cbHeaderLearn.Items.AddRange(result.OrderByDescending(a=>a.score).Take(10).Select((a,b)=> a.header+"("+a.score+")").ToArray());
             //cbHeaderLearn.Items.AddRange(disRes.OrderByDescending(a => a.score).Take(10).Select(a => a.header_topic.Substring(0, a.header_topic.IndexOf("_")) + "(" + a.score + ")").ToArray());
             //cbHeaderLearn.SelectedIndex = 0;
-            //cbTopicLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.topic + "(" + a.score + ")").ToArray());
-            //cbTopicLearn.Items.AddRange(disRes.OrderByDescending(a => a.score).Take(10).Select(a => a.header_topic.Substring(a.header_topic.IndexOf("_") + 1) + "(" + a.score + ")").ToArray());
-            cbTopicLearn.Items.AddRange(minRes.OrderByDescending(a => a.Avg).Take(10).Select(a => a.tp + "(" + a.Avg + ")").ToArray());
-            cbTopicLearn.SelectedIndex = 0;
+            //lbToicsLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.topic + "(" + a.score + ")").ToArray());
+            //lbToicsLearn.Items.AddRange(disRes.OrderByDescending(a => a.score).Take(10).Select(a => a.header_topic.Substring(a.header_topic.IndexOf("_") + 1) + "(" + a.score + ")").ToArray());
+            var listtopic = minRes.OrderByDescending(a => a.Avg).Take(10).Select(a => a.tp + "(" + a.Avg + ")").ToArray();
+            lbToicsLearn.Items.AddRange(listtopic);
 
+            tbTopicLearn.Text = listtopic.First();
         }
 
 
         Analysis analysis = new Analysis();
 
-        lbKeywords.Items.AddRange(analysis.KeyWordCalculate(tbContentLearn.Text.Replace("@@@@@",""), "\n"));
-        cbTopicLearn.DroppedDown = true;
+        lbKeywords.Items.AddRange(analysis.KeyWordCalculate(tbContentLearn.Text.Replace("@@@@@", ""), "\n"));
+        //lbToicsLearn.DroppedDown = true;
 
 
 
     }
 
-    private async void  btnAddCategoryLearn_Click(object sender, EventArgs e)
+    private async void btnAddCategoryLearn_Click(object sender, EventArgs e)
     {
         Global.IndexElastic = $"bookanalysis_{cbCategoryLearn.Text.ToLower()}";
         if (cbCategoryLearn.Text is not null)
@@ -405,9 +415,9 @@ public partial class Book_Analysis : Form
 
 
             Analysis analysis = new Analysis();
-            
-            lbKeywordVal.Items.AddRange(analysis.KeyWordCalculate(tbContentTestVal.Text , "\n"));
-            
+
+            lbKeywordVal.Items.AddRange(analysis.KeyWordCalculate(tbContentTestVal.Text, "\n"));
+
         }
 
 
@@ -418,8 +428,11 @@ public partial class Book_Analysis : Form
 
         cbCategoryLearn.Items.Clear();
         cbCategoryValidation.Items.Clear();
-        cbCategoryLearn.Items.AddRange(await ElasticSearchHelper.GetIndex());
-        cbCategoryValidation.Items.AddRange(await ElasticSearchHelper.GetIndex());
+        cbCategoryEdit.Items.Clear();
+        var items = await ElasticSearchHelper.GetIndex();
+        cbCategoryLearn.Items.AddRange(items);
+        cbCategoryValidation.Items.AddRange(items);
+        cbCategoryEdit.Items.AddRange(items);
 
     }
 
@@ -483,7 +496,7 @@ public partial class Book_Analysis : Form
             MessageBox.Show("End Of Book!", "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
-        cbTopicLearn.Items.Clear(); cbTopicLearn.Text = "";
+        lbToicsLearn.Items.Clear(); tbTopicLearn.Text = "";
         lbKeywords.Items.Clear(); lbKeywords.Text = "";
         offsetDoc++;
         tbContentLearn.Text = BookDocs[offsetDoc];
@@ -499,7 +512,7 @@ public partial class Book_Analysis : Form
             MessageBox.Show("Start Of Book!", "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
-        cbTopicLearn.Items.Clear(); cbTopicLearn.Text = "";
+        lbToicsLearn.Items.Clear(); tbTopicLearn.Text = "";
         lbKeywords.Items.Clear(); lbKeywords.Text = "";
         offsetDoc--;
         tbContentLearn.Text = BookDocs[offsetDoc];
@@ -514,7 +527,7 @@ public partial class Book_Analysis : Form
             MessageBox.Show("End Of Book!", "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
-        cbTopicLearn.Items.Clear(); cbTopicLearn.Text = "";
+        lbToicsLearn.Items.Clear(); tbTopicLearn.Text = "";
         lbKeywords.Items.Clear(); lbKeywords.Text = "";
         offsetDoc++;
         tbContentLearn.Text += "\n@@@@@\n";
@@ -528,9 +541,9 @@ public partial class Book_Analysis : Form
             MessageBox.Show("End Of Book!", "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
-        cbTopicLearn.Items.Clear(); cbTopicLearn.Text = "";
+        lbToicsLearn.Items.Clear(); tbTopicLearn.Text = "";
         lbKeywords.Items.Clear(); lbKeywords.Text = "";
-        offsetDoc+=10;
+        offsetDoc += 10;
         tbContentLearn.Text = BookDocs[offsetDoc];
 
         btnLearn.BackColor = Color.LightGray;
@@ -543,9 +556,9 @@ public partial class Book_Analysis : Form
             MessageBox.Show("Start Of Book!", "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
-        cbTopicLearn.Items.Clear(); cbTopicLearn.Text = "";
+        lbToicsLearn.Items.Clear(); tbTopicLearn.Text = "";
         lbKeywords.Items.Clear(); lbKeywords.Text = "";
-        offsetDoc-=10;
+        offsetDoc -= 10;
         tbContentLearn.Text = BookDocs[offsetDoc];
         btnLearn.BackColor = Color.LightGray;
 
@@ -553,30 +566,30 @@ public partial class Book_Analysis : Form
 
     private void rbReadBookLearn_Click(object sender, EventArgs e)
     {
-        gbAnalysisLearn.Visible =   true;
-        gbbookFileLearn.Visible =   true;
-        gbInfoLearn.Visible =       true;
-        btnNextLearn.Visible =      true;
-        btnNext10Learn.Visible =    true;
-        btnAddNextLearn.Visible =   true;
-        btnPredict.Visible =        true;
-        btnPrev10Learn.Visible =    true;
-        btnPrevLearn.Visible =      true;
-        gbBulkLearn.Visible =       false;
+        gbAnalysisLearn.Visible = true;
+        gbbookFileLearn.Visible = true;
+        gbInfoLearn.Visible = true;
+        btnNextLearn.Visible = true;
+        btnNext10Learn.Visible = true;
+        btnAddNextLearn.Visible = true;
+        btnPredict.Visible = true;
+        btnPrev10Learn.Visible = true;
+        btnPrevLearn.Visible = true;
+        gbBulkLearn.Visible = false;
     }
 
     private void rbImportLearn_CheckedChanged(object sender, EventArgs e)
     {
-        gbAnalysisLearn.Visible =   false;
-        gbbookFileLearn.Visible =   false;
-        gbInfoLearn.Visible =       false;
-        btnNextLearn.Visible =      false;
-        btnNext10Learn.Visible =    false;
-        btnAddNextLearn.Visible =   false;
-        btnPredict.Visible =        false;
-        btnPrev10Learn.Visible =    false;
-        btnPrevLearn.Visible =      false;
-        gbBulkLearn.Visible =       true;
+        gbAnalysisLearn.Visible = false;
+        gbbookFileLearn.Visible = false;
+        gbInfoLearn.Visible = false;
+        btnNextLearn.Visible = false;
+        btnNext10Learn.Visible = false;
+        btnAddNextLearn.Visible = false;
+        btnPredict.Visible = false;
+        btnPrev10Learn.Visible = false;
+        btnPrevLearn.Visible = false;
+        gbBulkLearn.Visible = true;
     }
 
     private void btnBrowsImport_Click(object sender, EventArgs e)
@@ -612,5 +625,47 @@ public partial class Book_Analysis : Form
     {
         btnLearn.BackColor = Color.LightGray;
 
+    }
+
+
+    private void cbBooknameEdit_Click(object sender, EventArgs e)
+    {
+        cbBooknameEditSearch.Items.Clear(); cbBooknameEditSearch.Items.AddRange(ElasticSearchHelper.GetGroupByFields(Global.IndexElastic, "bookname.keyword"));
+    }
+
+    private void cbTopicEdit_Click(object sender, EventArgs e)
+    {
+        cbTopicEditSearch.Items.Clear(); cbTopicEditSearch.Items.AddRange(ElasticSearchHelper.GetGroupByFields(Global.IndexElastic, "topic.keyword"));
+    }
+
+    private void cbCategoryEdit_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Global.IndexElastic = $"bookanalysis_{cbCategoryEdit.Text.ToLower()}";
+
+    }
+
+    private void btnSearchEdit_Click(object sender, EventArgs e)
+    {
+        BookDocsEdit = ElasticSearchHelper.SearchFields(Global.IndexElastic, cbBooknameEditSearch.Text, cbTopicEditSearch.Text, tbContentEditSearch.Text);
+
+        if (BookDocsEdit.Count == 0) return;
+        tbBookNameEditRes.Text = BookDocsEdit[0].bookname;
+        tbTopicEditRes.Text = BookDocsEdit[0].topic;
+        dpPublisDateEditRes.Value = BookDocsEdit[0].publishdate;
+        dpEventDateEditRes.Value = BookDocsEdit[0].eventdate;
+        tbContentEditReult.Text = BookDocsEdit[0].content;
+
+
+        gbResultSearch.Enabled = true;
+    }
+
+    private void btnDashboard_Click(object sender, EventArgs e)
+    {
+        Global.openBrowse("http://localhost:3000/d/wECO4Qi4z/bookanalysis");
+    }
+
+    private void lbToicsLearn_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        tbTopicLearn.Text=lbToicsLearn.SelectedItem.ToString();
     }
 }

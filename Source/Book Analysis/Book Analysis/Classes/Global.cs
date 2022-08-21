@@ -1,6 +1,7 @@
 ﻿using Book_Analysis.Models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,6 +28,7 @@ namespace Book_Analysis.Classes
                 fields[3] = analysis.RemovePunctuations(fields[3]);
                 fields[3] = analysis.RemoveNumber(fields[3]);
                 fields[3] = analysis.RemoveEnterLine(fields[3]);
+                if (fields[3] == "") continue;
                 datas.Add(new BookInfoModel
                 {
                     bookname= fields[0],
@@ -50,6 +52,13 @@ namespace Book_Analysis.Classes
                 list[k] = list[n];
                 list[n] = value;
             }
+        }
+
+
+        public static void openBrowse(string url)
+        {
+            url = url.Replace("&", "^&");
+            Process.Start(new ProcessStartInfo("cmd", $"/c start {url}") { CreateNoWindow = true });
         }
     }
 }

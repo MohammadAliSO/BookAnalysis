@@ -29,8 +29,19 @@ namespace Book_Analysis.Classes
 
             var ids = ElasticSearchHelper.InsertData(listdocs.ToArray(), "keywordanalysis");
 
+            var ctt = analysis.PersianToEnglishNumber(text);
+            ctt = analysis.RemovePunctuations(ctt);
+            ctt = analysis.RemoveNumber(ctt);
+            ctt = analysis.RemoveEnterLine(ctt);
+            listdocs.Clear();
+            listdocs.Add(new BookInfoModel
+                {
+                    content = ctt
+                });
+            var idOrg = ElasticSearchHelper.InsertData(listdocs.ToArray(), "keywordanalysis");
+
             Dictionary<string, double> keywords = new();
-            foreach (var id in ids)
+            foreach (var id in idOrg)
             {
                 var keyp = ElasticSearchHelper.TermVectors(contents.Count(), id, true, true);
                 foreach (var k in keyp)
@@ -40,10 +51,10 @@ namespace Book_Analysis.Classes
                     else keywords[k.Key] = k.Value;
 
                 }
-                ElasticSearchHelper.DeleteDoc("keywordanalysis", id);
 
             }
             var keys = keywords.OrderByDescending(a => a.Value).Select(a => a.Key).Take(10).ToArray();
+            ElasticSearchHelper.DeleteAll("keywordanalysis");
             return keys;
 
         }

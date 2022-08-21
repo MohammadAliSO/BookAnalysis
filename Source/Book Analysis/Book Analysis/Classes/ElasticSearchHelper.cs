@@ -296,7 +296,14 @@ namespace Book_Analysis.Classes
 
             return Indexes.ToArray();
         }
-
+        public static bool DeleteAll (string IndexName)
+        {
+            var elasticClient = CreateConnection();
+            var result = elasticClient.DeleteByQuery<BookInfoModel>(del => del.Index(IndexName)
+    .Query(q => q.QueryString(qs => qs.Query("*")))
+); 
+            return result.IsValid;
+        }
         public static bool DeleteDoc(string IndexName, string Id)
         {
             var elasticClient = CreateConnection();
@@ -313,6 +320,107 @@ namespace Book_Analysis.Classes
 
             //analyzeResponse.Tokens.Select(a=> new  {a.Token ,a.Position}).
             return analyzeResponse.Tokens.GroupBy(a => a.Token).Select(a => new { token = a.Key, id = a.Max(s => s.Position) }).ToDictionary(a=>a.id,a=>a.token);
+
+
+        }
+        public static string[] GetGroupByFields(string IndexName, string FieldName)
+        {
+            using (var client = new RestClient($"{Config.All.ElasticSearch.Address}/{IndexName}/_search"))
+            {
+
+                var request = new RestRequest($"{Config.All.ElasticSearch.Address}/{IndexName}/_search", Method.Post);
+                request.AddHeader("Content-Type", "application/json");
+
+                var body = "{\r\n  \"from\":0,\r\n  \"size\":0,\r\n  \"aggs\": {\r\n    \"query\": {\r\n      \"terms\": {\r\n        \"field\": \"@field\"\r\n      }\r\n    }\r\n  }\r\n}";
+                body = body.Replace("@field", FieldName);
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                var res = client.Execute(request);
+
+                GroupByFieldValue groupByField = JsonConvert.DeserializeObject<GroupByFieldValue>(res.Content);
+
+                return groupByField.aggregations.query.buckets.Select(a=>a.key).ToArray();
+
+            }
+        }
+
+
+        public static List<BookInfoModel> SearchFields(string IndexName , string bookname="" , string topic = "", string content = "")
+        {
+            ConcurrentBag<BookInfoModel> result = new ConcurrentBag<BookInfoModel>();
+
+
+            Time processTimePerScroll = "20s";
+            int numberOfSlices = Environment.ProcessorCount;
+            var elasticClient = CreateConnection();
+       
+            var scrollAllObservable = elasticClient.ScrollAll<BookLikeInfoModel>(processTimePerScroll, numberOfSlices, sc => sc
+                .MaxDegreeOfParallelism(numberOfSlices)
+                .Search(s => s.Index(IndexName)
+                                 .Query(q => q
+        .Term(p => p.bookname, bookname) || q.Term(p => p.topic, topic) || q.Term(p => p.content, content)
+    )));
+                            //.Search(s => s.Index(IndexName)
+                            // .Query(q => q
+                            //            .DisMax(dm => dm
+                            //                .Queries(dq => dq
+                            //                    .Match(m => m
+                            //                        .Field(a => a.bookname)
+                            //                        .Query(bookname)
+                            //                    ), dq => dq
+                            //                    .Match(m => m
+                            //                        .Field(a => a.topic)
+                            //                        .Query(topic)
+                            //                    ), dq => dq
+                            //                    .Match(m => m
+                            //                        .Field(a => a.content)
+                            //                        .Query(content)
+                            //                    )
+                            //                )
+                            //            )
+                            //       )));
+            var waitHandle = new ManualResetEvent(false);
+            Exception exception = null;
+
+            var scrollAllObserver = new ScrollAllObserver<BookLikeInfoModel>(
+                onNext: response =>
+                {
+                    // do something with the documents
+                    var documents = response.SearchResponse.Documents;
+                    foreach (var hit in response.SearchResponse.Hits)
+                    {
+                        result.Add( new BookLikeInfoModel
+                        {
+                            bookname = hit.Source.bookname,
+                            id = hit.Source.id,
+                            publishdate = hit.Source.publishdate,
+                            content = hit.Source.content,
+                            topic = hit.Source.topic,
+                            score = hit.Source.score,
+                            eventdate = hit.Source.eventdate
+                        });
+                    }
+                },
+                onError: e =>
+                {
+                    exception = e;
+                    waitHandle.Set();
+                },
+                onCompleted: () => waitHandle.Set()
+            );
+
+
+            scrollAllObservable.Subscribe(scrollAllObserver);
+
+            waitHandle.WaitOne();
+
+            if (exception != null)
+            {
+                throw exception;
+            }
+
+
+
+            return result.ToList();
 
 
         }
