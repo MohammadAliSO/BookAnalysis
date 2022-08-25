@@ -12,6 +12,17 @@ namespace Book_Analysis.Models
         public Query query { get; set; }
     }
 
+    public class Aggregations2
+    {
+        public Aggs aggs { get; set; }
+    }
+
+    public class Aggs
+    {
+        public int doc_count_error_upper_bound { get; set; }
+        public int sum_other_doc_count { get; set; }
+        public List<Bucket> buckets { get; set; }
+    }
     public class Bucket
     {
         public string key { get; set; }
@@ -32,7 +43,7 @@ namespace Book_Analysis.Models
         public List<Bucket> buckets { get; set; }
     }
 
-    public class GroupByFieldValue
+    public class GroupAllFieldValue
     {
         public int took { get; set; }
         public bool timed_out { get; set; }
@@ -87,6 +98,19 @@ namespace Book_Analysis.Models
         public string content { get; set; }
         public DateTime publishdate { get; set; }
         public DateTime eventdate { get; set; }
+    }
+
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    
+   
+
+    public class GroupAllFieldByFilterValue
+    {
+        public int took { get; set; }
+        public bool timed_out { get; set; }
+        public Shards _shards { get; set; }
+        public Hits hits { get; set; }
+        public Aggregations2 aggregations { get; set; }
     }
 
 

@@ -48,7 +48,7 @@ namespace Book_Analysis.Classes
                 {
                     var tf = ttfMode? term.Value.TotalTermFrequency  : term.Value.TermFrequency;
 
-                    var tfidf = tf * (Math.Log(docCount / (term.Value.DocumentFrequency)));
+                    var tfidf = tf * (Math.Log(((double)(docCount )/(term.Value.DocumentFrequency))+1));
                     keywords[term.Key] = tfidf;
                 }
 
@@ -323,7 +323,7 @@ namespace Book_Analysis.Classes
 
 
         }
-        public static string[] GetGroupByFields(string IndexName, string FieldName)
+        public static string[] GetGroupAllFields(string IndexName, string FieldName)
         {
             using (var client = new RestClient($"{Config.All.ElasticSearch.Address}/{IndexName}/_search"))
             {
@@ -336,13 +336,31 @@ namespace Book_Analysis.Classes
                 request.AddParameter("application/json", body, ParameterType.RequestBody);
                 var res = client.Execute(request);
 
-                GroupByFieldValue groupByField = JsonConvert.DeserializeObject<GroupByFieldValue>(res.Content);
+                GroupAllFieldValue groupByField = JsonConvert.DeserializeObject<GroupAllFieldValue>(res.Content);
 
                 return groupByField.aggregations.query.buckets.Select(a=>a.key).ToArray();
 
             }
         }
+        public static Dictionary<string,int> GetGroupAllFieldsByFilter(string IndexName,  string MainField , string FilterField , string FilterValue)
+        {
+            using (var client = new RestClient($"{Config.All.ElasticSearch.Address}/{IndexName}/_search"))
+            {
 
+                var request = new RestRequest($"{Config.All.ElasticSearch.Address}/{IndexName}/_search", Method.Post);
+                request.AddHeader("Content-Type", "application/json");
+
+                var body = "{\r\n    \"size\": 0,\r\n    \"query\": {\r\n    \"bool\": {\r\n      \"must\": [],\r\n      \"filter\": [\r\n        {\r\n          \"bool\": {\r\n            \"should\": [\r\n              {\r\n                \"match_phrase\": {\r\n                  \"@FilterField\": \"@FilterValue\"\r\n                }\r\n              }\r\n            ],\r\n            \"minimum_should_match\": 1\r\n          }\r\n        }\r\n      ],\r\n      \"should\": [],\r\n      \"must_not\": []\r\n    }\r\n    },\r\n    \"aggs\": {\r\n\r\n            \"aggs\": {\r\n\"terms\": {\r\n                                \"field\": \"@AggsField\",\r\n                                \"size\": 20\r\n                            }\r\n            }\r\n        \r\n    }\r\n}";
+                body = body.Replace("@AggsField", MainField).Replace("@FilterField", FilterField).Replace("@FilterValue", FilterValue);
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                var res = client.Execute(request);
+
+                GroupAllFieldByFilterValue groupByField = JsonConvert.DeserializeObject<GroupAllFieldByFilterValue>(res.Content);
+
+                return groupByField.aggregations.aggs.buckets.Select(a =>  new { a.key ,a.doc_count } ).ToDictionary(a=>a.key ,a=>a.doc_count);
+
+            }
+        }
 
         public static List<BookInfoModel> SearchFields(string IndexName , string bookname="" , string topic = "", string content = "")
         {

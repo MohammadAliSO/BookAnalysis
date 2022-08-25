@@ -48,7 +48,10 @@
             this.btnPrevLearn = new System.Windows.Forms.Button();
             this.btnNextLearn = new System.Windows.Forms.Button();
             this.gbAnalysisLearn = new System.Windows.Forms.GroupBox();
-            this.cbTopicLearn = new System.Windows.Forms.ComboBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lbAllTopicsLearn = new System.Windows.Forms.ListBox();
+            this.tbTopicLearn = new System.Windows.Forms.TextBox();
+            this.lbToicsLearn = new System.Windows.Forms.ListBox();
             this.lbKeywords = new System.Windows.Forms.ListBox();
             this.label27 = new System.Windows.Forms.Label();
             this.labelytyt = new System.Windows.Forms.Label();
@@ -68,31 +71,32 @@
             this.btnBrowsBookFile = new System.Windows.Forms.Button();
             this.btnReadBook = new System.Windows.Forms.Button();
             this.tabAnalysis = new System.Windows.Forms.TabPage();
+            this.pbAnalysis = new System.Windows.Forms.ProgressBar();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.btnRejectAnal = new System.Windows.Forms.Button();
+            this.btnAcceptAnal = new System.Windows.Forms.Button();
             this.btnDashboard = new System.Windows.Forms.Button();
-            this.textBox4 = new System.Windows.Forms.TextBox();
-            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.tbsimBookAnal = new System.Windows.Forms.TextBox();
+            this.tbmainTopicAnal = new System.Windows.Forms.TextBox();
             this.labelsdf = new System.Windows.Forms.Label();
             this.labelsadsd = new System.Windows.Forms.Label();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.listBox2 = new System.Windows.Forms.ListBox();
+            this.lbBookAnal = new System.Windows.Forms.ListBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.listBox3 = new System.Windows.Forms.ListBox();
+            this.lbKeywordAnal = new System.Windows.Forms.ListBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.lbTopicsAnal = new System.Windows.Forms.ListBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.labelPBFB = new System.Windows.Forms.Label();
             this.labelASDFVB = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.button3 = new System.Windows.Forms.Button();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.tbPathFileAnal = new System.Windows.Forms.TextBox();
+            this.btnBrowseAnal = new System.Windows.Forms.Button();
+            this.cbCategoryAnal = new System.Windows.Forms.ComboBox();
             this.labelvc = new System.Windows.Forms.Label();
             this.labelew = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.btnGetKeyword = new System.Windows.Forms.Button();
+            this.tbBookNameAnal = new System.Windows.Forms.TextBox();
+            this.btnStartAnalysis = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.gbTestVal = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -159,8 +163,6 @@
             this.cbCategoryEdit = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.lbToicsLearn = new System.Windows.Forms.ListBox();
-            this.tbTopicLearn = new System.Windows.Forms.TextBox();
             this.tabControl.SuspendLayout();
             this.tabLearn.SuspendLayout();
             this.gbBulkLearn.SuspendLayout();
@@ -266,6 +268,7 @@
             this.gbBulkLearn.TabStop = false;
             this.gbBulkLearn.Text = "Import Learn";
             this.toolTip1.SetToolTip(this.gbBulkLearn, "bookname,topic,publishdate,content");
+            this.gbBulkLearn.Visible = false;
             // 
             // PathlalaFile
             // 
@@ -411,9 +414,10 @@
             // gbAnalysisLearn
             // 
             this.gbAnalysisLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.gbAnalysisLearn.Controls.Add(this.label5);
+            this.gbAnalysisLearn.Controls.Add(this.lbAllTopicsLearn);
             this.gbAnalysisLearn.Controls.Add(this.tbTopicLearn);
             this.gbAnalysisLearn.Controls.Add(this.lbToicsLearn);
-            this.gbAnalysisLearn.Controls.Add(this.cbTopicLearn);
             this.gbAnalysisLearn.Controls.Add(this.lbKeywords);
             this.gbAnalysisLearn.Controls.Add(this.label27);
             this.gbAnalysisLearn.Controls.Add(this.labelytyt);
@@ -426,24 +430,58 @@
             this.gbAnalysisLearn.TabStop = false;
             this.gbAnalysisLearn.Text = "Analysis";
             // 
-            // cbTopicLearn
+            // label5
             // 
-            this.cbTopicLearn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.cbTopicLearn.FormattingEnabled = true;
-            this.cbTopicLearn.Location = new System.Drawing.Point(431, 72);
-            this.cbTopicLearn.MaxDropDownItems = 1;
-            this.cbTopicLearn.Name = "cbTopicLearn";
-            this.cbTopicLearn.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.cbTopicLearn.Size = new System.Drawing.Size(252, 23);
-            this.cbTopicLearn.TabIndex = 30;
+            this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(404, 22);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(57, 15);
+            this.label5.TabIndex = 34;
+            this.label5.Text = "All Topics";
+            // 
+            // lbAllTopicsLearn
+            // 
+            this.lbAllTopicsLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lbAllTopicsLearn.FormattingEnabled = true;
+            this.lbAllTopicsLearn.HorizontalScrollbar = true;
+            this.lbAllTopicsLearn.ItemHeight = 15;
+            this.lbAllTopicsLearn.Location = new System.Drawing.Point(357, 37);
+            this.lbAllTopicsLearn.Name = "lbAllTopicsLearn";
+            this.lbAllTopicsLearn.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lbAllTopicsLearn.Size = new System.Drawing.Size(153, 124);
+            this.lbAllTopicsLearn.TabIndex = 33;
+            this.lbAllTopicsLearn.SelectedIndexChanged += new System.EventHandler(this.lbAllTopicsLearn_SelectedIndexChanged);
+            // 
+            // tbTopicLearn
+            // 
+            this.tbTopicLearn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbTopicLearn.Location = new System.Drawing.Point(99, 11);
+            this.tbTopicLearn.Name = "tbTopicLearn";
+            this.tbTopicLearn.Size = new System.Drawing.Size(252, 23);
+            this.tbTopicLearn.TabIndex = 32;
+            this.tbTopicLearn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // lbToicsLearn
+            // 
+            this.lbToicsLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.lbToicsLearn.FormattingEnabled = true;
+            this.lbToicsLearn.HorizontalScrollbar = true;
+            this.lbToicsLearn.ItemHeight = 15;
+            this.lbToicsLearn.Location = new System.Drawing.Point(99, 37);
+            this.lbToicsLearn.Name = "lbToicsLearn";
+            this.lbToicsLearn.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lbToicsLearn.Size = new System.Drawing.Size(252, 124);
+            this.lbToicsLearn.TabIndex = 31;
+            this.lbToicsLearn.SelectedIndexChanged += new System.EventHandler(this.lbToicsLearn_SelectedIndexChanged);
             // 
             // lbKeywords
             // 
-            this.lbKeywords.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.lbKeywords.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.lbKeywords.FormattingEnabled = true;
             this.lbKeywords.HorizontalScrollbar = true;
             this.lbKeywords.ItemHeight = 15;
-            this.lbKeywords.Location = new System.Drawing.Point(615, 22);
+            this.lbKeywords.Location = new System.Drawing.Point(756, 22);
             this.lbKeywords.Name = "lbKeywords";
             this.lbKeywords.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.lbKeywords.SelectionMode = System.Windows.Forms.SelectionMode.None;
@@ -454,7 +492,7 @@
             // 
             this.label27.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(548, 26);
+            this.label27.Location = new System.Drawing.Point(689, 26);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(61, 15);
             this.label27.TabIndex = 28;
@@ -464,7 +502,7 @@
             // 
             this.labelytyt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelytyt.AutoSize = true;
-            this.labelytyt.Location = new System.Drawing.Point(99, 18);
+            this.labelytyt.Location = new System.Drawing.Point(52, 15);
             this.labelytyt.Name = "labelytyt";
             this.labelytyt.Size = new System.Drawing.Size(43, 15);
             this.labelytyt.TabIndex = 23;
@@ -633,9 +671,10 @@
             // tabAnalysis
             // 
             this.tabAnalysis.BackColor = System.Drawing.Color.AliceBlue;
+            this.tabAnalysis.Controls.Add(this.pbAnalysis);
             this.tabAnalysis.Controls.Add(this.groupBox2);
             this.tabAnalysis.Controls.Add(this.groupBox1);
-            this.tabAnalysis.Controls.Add(this.btnGetKeyword);
+            this.tabAnalysis.Controls.Add(this.btnStartAnalysis);
             this.tabAnalysis.Location = new System.Drawing.Point(4, 24);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.Padding = new System.Windows.Forms.Padding(3);
@@ -643,14 +682,23 @@
             this.tabAnalysis.TabIndex = 1;
             this.tabAnalysis.Text = "Analysis";
             // 
+            // pbAnalysis
+            // 
+            this.pbAnalysis.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pbAnalysis.Location = new System.Drawing.Point(403, 169);
+            this.pbAnalysis.Name = "pbAnalysis";
+            this.pbAnalysis.Size = new System.Drawing.Size(241, 10);
+            this.pbAnalysis.TabIndex = 34;
+            this.pbAnalysis.Visible = false;
+            // 
             // groupBox2
             // 
             this.groupBox2.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.groupBox2.Controls.Add(this.button5);
-            this.groupBox2.Controls.Add(this.button4);
+            this.groupBox2.Controls.Add(this.btnRejectAnal);
+            this.groupBox2.Controls.Add(this.btnAcceptAnal);
             this.groupBox2.Controls.Add(this.btnDashboard);
-            this.groupBox2.Controls.Add(this.textBox4);
-            this.groupBox2.Controls.Add(this.textBox3);
+            this.groupBox2.Controls.Add(this.tbsimBookAnal);
+            this.groupBox2.Controls.Add(this.tbmainTopicAnal);
             this.groupBox2.Controls.Add(this.labelsdf);
             this.groupBox2.Controls.Add(this.labelsadsd);
             this.groupBox2.Controls.Add(this.groupBox7);
@@ -663,25 +711,27 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Result";
             // 
-            // button5
+            // btnRejectAnal
             // 
-            this.button5.BackColor = System.Drawing.Color.Pink;
-            this.button5.Location = new System.Drawing.Point(509, 516);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(132, 23);
-            this.button5.TabIndex = 41;
-            this.button5.Text = "Reject";
-            this.button5.UseVisualStyleBackColor = false;
+            this.btnRejectAnal.BackColor = System.Drawing.Color.Pink;
+            this.btnRejectAnal.Location = new System.Drawing.Point(509, 516);
+            this.btnRejectAnal.Name = "btnRejectAnal";
+            this.btnRejectAnal.Size = new System.Drawing.Size(132, 23);
+            this.btnRejectAnal.TabIndex = 41;
+            this.btnRejectAnal.Text = "Reject";
+            this.btnRejectAnal.UseVisualStyleBackColor = false;
+            this.btnRejectAnal.Click += new System.EventHandler(this.btnRejectAnal_Click);
             // 
-            // button4
+            // btnAcceptAnal
             // 
-            this.button4.BackColor = System.Drawing.Color.PaleGreen;
-            this.button4.Location = new System.Drawing.Point(375, 516);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(132, 23);
-            this.button4.TabIndex = 40;
-            this.button4.Text = "Accept";
-            this.button4.UseVisualStyleBackColor = false;
+            this.btnAcceptAnal.BackColor = System.Drawing.Color.PaleGreen;
+            this.btnAcceptAnal.Location = new System.Drawing.Point(375, 516);
+            this.btnAcceptAnal.Name = "btnAcceptAnal";
+            this.btnAcceptAnal.Size = new System.Drawing.Size(132, 23);
+            this.btnAcceptAnal.TabIndex = 40;
+            this.btnAcceptAnal.Text = "Accept";
+            this.btnAcceptAnal.UseVisualStyleBackColor = false;
+            this.btnAcceptAnal.Click += new System.EventHandler(this.btnAcceptAnal_Click);
             // 
             // btnDashboard
             // 
@@ -693,19 +743,21 @@
             this.btnDashboard.UseVisualStyleBackColor = true;
             this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
-            // textBox4
+            // tbsimBookAnal
             // 
-            this.textBox4.Location = new System.Drawing.Point(505, 407);
-            this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(174, 23);
-            this.textBox4.TabIndex = 38;
+            this.tbsimBookAnal.Location = new System.Drawing.Point(501, 407);
+            this.tbsimBookAnal.Name = "tbsimBookAnal";
+            this.tbsimBookAnal.ReadOnly = true;
+            this.tbsimBookAnal.Size = new System.Drawing.Size(174, 23);
+            this.tbsimBookAnal.TabIndex = 38;
             // 
-            // textBox3
+            // tbmainTopicAnal
             // 
-            this.textBox3.Location = new System.Drawing.Point(114, 408);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(180, 23);
-            this.textBox3.TabIndex = 37;
+            this.tbmainTopicAnal.Location = new System.Drawing.Point(114, 408);
+            this.tbmainTopicAnal.Name = "tbmainTopicAnal";
+            this.tbmainTopicAnal.ReadOnly = true;
+            this.tbmainTopicAnal.Size = new System.Drawing.Size(180, 23);
+            this.tbmainTopicAnal.TabIndex = 37;
             // 
             // labelsdf
             // 
@@ -729,7 +781,7 @@
             // 
             // groupBox7
             // 
-            this.groupBox7.Controls.Add(this.listBox2);
+            this.groupBox7.Controls.Add(this.lbBookAnal);
             this.groupBox7.Location = new System.Drawing.Point(425, 46);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Size = new System.Drawing.Size(254, 346);
@@ -737,18 +789,20 @@
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Books";
             // 
-            // listBox2
+            // lbBookAnal
             // 
-            this.listBox2.FormattingEnabled = true;
-            this.listBox2.ItemHeight = 15;
-            this.listBox2.Location = new System.Drawing.Point(7, 18);
-            this.listBox2.Name = "listBox2";
-            this.listBox2.Size = new System.Drawing.Size(241, 319);
-            this.listBox2.TabIndex = 1;
+            this.lbBookAnal.FormattingEnabled = true;
+            this.lbBookAnal.ItemHeight = 15;
+            this.lbBookAnal.Location = new System.Drawing.Point(7, 18);
+            this.lbBookAnal.Name = "lbBookAnal";
+            this.lbBookAnal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lbBookAnal.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.lbBookAnal.Size = new System.Drawing.Size(241, 319);
+            this.lbBookAnal.TabIndex = 1;
             // 
             // groupBox6
             // 
-            this.groupBox6.Controls.Add(this.listBox3);
+            this.groupBox6.Controls.Add(this.lbKeywordAnal);
             this.groupBox6.Location = new System.Drawing.Point(778, 46);
             this.groupBox6.Name = "groupBox6";
             this.groupBox6.Size = new System.Drawing.Size(200, 346);
@@ -756,18 +810,20 @@
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Keywords";
             // 
-            // listBox3
+            // lbKeywordAnal
             // 
-            this.listBox3.FormattingEnabled = true;
-            this.listBox3.ItemHeight = 15;
-            this.listBox3.Location = new System.Drawing.Point(6, 19);
-            this.listBox3.Name = "listBox3";
-            this.listBox3.Size = new System.Drawing.Size(188, 319);
-            this.listBox3.TabIndex = 1;
+            this.lbKeywordAnal.FormattingEnabled = true;
+            this.lbKeywordAnal.ItemHeight = 15;
+            this.lbKeywordAnal.Location = new System.Drawing.Point(6, 19);
+            this.lbKeywordAnal.Name = "lbKeywordAnal";
+            this.lbKeywordAnal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lbKeywordAnal.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.lbKeywordAnal.Size = new System.Drawing.Size(188, 319);
+            this.lbKeywordAnal.TabIndex = 1;
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.listBox1);
+            this.groupBox3.Controls.Add(this.lbTopicsAnal);
             this.groupBox3.Location = new System.Drawing.Point(46, 46);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(254, 346);
@@ -775,14 +831,16 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Topics";
             // 
-            // listBox1
+            // lbTopicsAnal
             // 
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
-            this.listBox1.Location = new System.Drawing.Point(7, 19);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(241, 319);
-            this.listBox1.TabIndex = 0;
+            this.lbTopicsAnal.FormattingEnabled = true;
+            this.lbTopicsAnal.ItemHeight = 15;
+            this.lbTopicsAnal.Location = new System.Drawing.Point(7, 19);
+            this.lbTopicsAnal.Name = "lbTopicsAnal";
+            this.lbTopicsAnal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lbTopicsAnal.SelectionMode = System.Windows.Forms.SelectionMode.None;
+            this.lbTopicsAnal.Size = new System.Drawing.Size(241, 319);
+            this.lbTopicsAnal.TabIndex = 0;
             // 
             // groupBox1
             // 
@@ -790,12 +848,12 @@
             this.groupBox1.Controls.Add(this.dateTimePicker1);
             this.groupBox1.Controls.Add(this.labelPBFB);
             this.groupBox1.Controls.Add(this.labelASDFVB);
-            this.groupBox1.Controls.Add(this.textBox2);
-            this.groupBox1.Controls.Add(this.button3);
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.tbPathFileAnal);
+            this.groupBox1.Controls.Add(this.btnBrowseAnal);
+            this.groupBox1.Controls.Add(this.cbCategoryAnal);
             this.groupBox1.Controls.Add(this.labelvc);
             this.groupBox1.Controls.Add(this.labelew);
-            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Controls.Add(this.tbBookNameAnal);
             this.groupBox1.Location = new System.Drawing.Point(4, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(1050, 132);
@@ -830,35 +888,37 @@
             this.labelASDFVB.Text = "Path File:";
             this.toolTip1.SetToolTip(this.labelASDFVB, "bookname,topic,publishdate,content");
             // 
-            // textBox2
+            // tbPathFileAnal
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.tbPathFileAnal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Location = new System.Drawing.Point(72, 81);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(923, 23);
-            this.textBox2.TabIndex = 33;
-            this.toolTip1.SetToolTip(this.textBox2, "bookname,topic,publishdate,content");
+            this.tbPathFileAnal.Location = new System.Drawing.Point(72, 81);
+            this.tbPathFileAnal.Name = "tbPathFileAnal";
+            this.tbPathFileAnal.Size = new System.Drawing.Size(923, 23);
+            this.tbPathFileAnal.TabIndex = 33;
+            this.toolTip1.SetToolTip(this.tbPathFileAnal, "bookname,topic,publishdate,content");
             // 
-            // button3
+            // btnBrowseAnal
             // 
-            this.button3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button3.Location = new System.Drawing.Point(1001, 81);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(37, 23);
-            this.button3.TabIndex = 32;
-            this.button3.Text = "...";
-            this.toolTip1.SetToolTip(this.button3, "bookname,topic,publishdate,content");
-            this.button3.UseVisualStyleBackColor = true;
+            this.btnBrowseAnal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnBrowseAnal.Location = new System.Drawing.Point(1001, 81);
+            this.btnBrowseAnal.Name = "btnBrowseAnal";
+            this.btnBrowseAnal.Size = new System.Drawing.Size(37, 23);
+            this.btnBrowseAnal.TabIndex = 32;
+            this.btnBrowseAnal.Text = "...";
+            this.toolTip1.SetToolTip(this.btnBrowseAnal, "bookname,topic,publishdate,content");
+            this.btnBrowseAnal.UseVisualStyleBackColor = true;
+            this.btnBrowseAnal.Click += new System.EventHandler(this.btnBrowseAnal_Click);
             // 
-            // comboBox1
+            // cbCategoryAnal
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(72, 34);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.comboBox1.Size = new System.Drawing.Size(273, 23);
-            this.comboBox1.TabIndex = 29;
+            this.cbCategoryAnal.FormattingEnabled = true;
+            this.cbCategoryAnal.Location = new System.Drawing.Point(72, 34);
+            this.cbCategoryAnal.Name = "cbCategoryAnal";
+            this.cbCategoryAnal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.cbCategoryAnal.Size = new System.Drawing.Size(273, 23);
+            this.cbCategoryAnal.TabIndex = 29;
+            this.cbCategoryAnal.SelectedIndexChanged += new System.EventHandler(this.cbCategoryAnal_SelectedIndexChanged);
             // 
             // labelvc
             // 
@@ -878,25 +938,26 @@
             this.labelew.TabIndex = 28;
             this.labelew.Text = "Category:";
             // 
-            // textBox1
+            // tbBookNameAnal
             // 
-            this.textBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.textBox1.Location = new System.Drawing.Point(482, 36);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(268, 23);
-            this.textBox1.TabIndex = 31;
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tbBookNameAnal.AcceptsTab = true;
+            this.tbBookNameAnal.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbBookNameAnal.Location = new System.Drawing.Point(482, 36);
+            this.tbBookNameAnal.Name = "tbBookNameAnal";
+            this.tbBookNameAnal.Size = new System.Drawing.Size(268, 23);
+            this.tbBookNameAnal.TabIndex = 31;
+            this.tbBookNameAnal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // btnGetKeyword
+            // btnStartAnalysis
             // 
-            this.btnGetKeyword.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnGetKeyword.Location = new System.Drawing.Point(402, 144);
-            this.btnGetKeyword.Name = "btnGetKeyword";
-            this.btnGetKeyword.Size = new System.Drawing.Size(243, 23);
-            this.btnGetKeyword.TabIndex = 0;
-            this.btnGetKeyword.Text = "Get Keyword";
-            this.btnGetKeyword.UseVisualStyleBackColor = true;
-            this.btnGetKeyword.Click += new System.EventHandler(this.btnGetKeyword_Click);
+            this.btnStartAnalysis.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnStartAnalysis.Location = new System.Drawing.Point(402, 144);
+            this.btnStartAnalysis.Name = "btnStartAnalysis";
+            this.btnStartAnalysis.Size = new System.Drawing.Size(243, 23);
+            this.btnStartAnalysis.TabIndex = 0;
+            this.btnStartAnalysis.Text = "Start";
+            this.btnStartAnalysis.UseVisualStyleBackColor = true;
+            this.btnStartAnalysis.Click += new System.EventHandler(this.btnStartAnalysis_Click);
             // 
             // tabPage1
             // 
@@ -1612,29 +1673,6 @@
             this.label16.TabIndex = 30;
             this.label16.Text = "Category:";
             // 
-            // lbToicsLearn
-            // 
-            this.lbToicsLearn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lbToicsLearn.FormattingEnabled = true;
-            this.lbToicsLearn.HorizontalScrollbar = true;
-            this.lbToicsLearn.ItemHeight = 15;
-            this.lbToicsLearn.Location = new System.Drawing.Point(146, 40);
-            this.lbToicsLearn.Name = "lbToicsLearn";
-            this.lbToicsLearn.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.lbToicsLearn.SelectionMode = System.Windows.Forms.SelectionMode.None;
-            this.lbToicsLearn.Size = new System.Drawing.Size(252, 124);
-            this.lbToicsLearn.TabIndex = 31;
-            this.lbToicsLearn.SelectedIndexChanged += new System.EventHandler(this.lbToicsLearn_SelectedIndexChanged);
-            // 
-            // tbTopicLearn
-            // 
-            this.tbTopicLearn.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbTopicLearn.Location = new System.Drawing.Point(146, 14);
-            this.tbTopicLearn.Name = "tbTopicLearn";
-            this.tbTopicLearn.Size = new System.Drawing.Size(252, 23);
-            this.tbTopicLearn.TabIndex = 32;
-            this.tbTopicLearn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // Book_Analysis
             // 
             this.AllowDrop = true;
@@ -1645,6 +1683,8 @@
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.tabSelector);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(1094, 888);
             this.Name = "Book_Analysis";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Book Analysis";
@@ -1746,7 +1786,7 @@
         private Label label21;
         private RichTextBox tbContentEditReult;
         private Label label24;
-        private Button btnGetKeyword;
+        private Button btnStartAnalysis;
         private RadioButton rbKappa;
         private RadioButton rbKfold;
         private GroupBox gbTestFile;
@@ -1762,7 +1802,6 @@
         private Label label27;
         private Button btnPrevLearn;
         private Button btnNextLearn;
-        private ComboBox cbTopicLearn;
         private RadioButton rbTestVal;
         private Button btnAddNextLearn;
         private Button btnPrev10Learn;
@@ -1782,29 +1821,29 @@
         private Label label18;
         private DateTimePicker dpEventDateEditRes;
         private GroupBox groupBox2;
-        private Button button5;
-        private Button button4;
+        private Button btnRejectAnal;
+        private Button btnAcceptAnal;
         private Button btnDashboard;
-        private TextBox textBox4;
-        private TextBox textBox3;
+        private TextBox tbsimBookAnal;
+        private TextBox tbmainTopicAnal;
         private Label labelsdf;
         private Label labelsadsd;
         private GroupBox groupBox7;
-        private ListBox listBox2;
+        private ListBox lbBookAnal;
         private GroupBox groupBox6;
-        private ListBox listBox3;
+        private ListBox lbKeywordAnal;
         private GroupBox groupBox3;
-        private ListBox listBox1;
+        private ListBox lbTopicsAnal;
         private GroupBox groupBox1;
         private DateTimePicker dateTimePicker1;
         private Label labelPBFB;
         private Label labelASDFVB;
-        private TextBox textBox2;
-        private Button button3;
-        private ComboBox comboBox1;
+        private TextBox tbPathFileAnal;
+        private Button btnBrowseAnal;
+        private ComboBox cbCategoryAnal;
         private Label labelvc;
         private Label labelew;
-        private TextBox textBox1;
+        private TextBox tbBookNameAnal;
         private RichTextBox tbContentLearn;
         private GroupBox gbTestVal;
         private Label label4;
@@ -1820,5 +1859,8 @@
         private Button button9;
         private TextBox tbTopicLearn;
         private ListBox lbToicsLearn;
+        private Label label5;
+        private ListBox lbAllTopicsLearn;
+        private ProgressBar pbAnalysis;
     }
 }

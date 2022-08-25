@@ -12,6 +12,8 @@ public partial class Book_Analysis : Form
     static List<BookInfoModel>? BookDocsEdit;
     static int offsetDoc = 0;
     static int offsetDocEdit = 0;
+    static string[]? NewBookIds=null;
+
     public Book_Analysis()
     {
         InitializeComponent();
@@ -151,7 +153,7 @@ public partial class Book_Analysis : Form
 
             var disRes = result.Select(a => new { a.topic, a.score }).Distinct().ToList();
 
-            var minRes = disRes.GroupBy(a => a.topic).Select(a => new { tp = a.Key, Avg = a.Sum(s => s.score) }).ToList();
+            var minRes = disRes.GroupBy(a => a.topic).Select(a => new { tp = a.Key, sum = a.Sum(s => s.score) }).ToList();
 
             lbToicsLearn.Items.Clear(); tbTopicLearn.Text = "";
             //lbToicsLearn.DroppedDown = true;
@@ -163,7 +165,7 @@ public partial class Book_Analysis : Form
                 //cbHeaderLearn.SelectedIndex = 0;
                 //lbToicsLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.topic + "(" + a.score + ")").ToArray());
                 //lbToicsLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.header_topic.Substring(a.header_topic.IndexOf("_") + 1) + "(" + a.score + ")").ToArray());
-                var listtopic = minRes.OrderByDescending(a => a.Avg).Take(10).Select(a => a.tp + "(" + a.Avg + ")").ToArray();
+                var listtopic = minRes.OrderByDescending(a => a.sum).Take(10).Select(a => a.tp + "(" + a.sum + ")").ToArray();
                 lbToicsLearn.Items.AddRange(listtopic);
 
                 tbTopicLearn.Text = listtopic.First();
@@ -185,7 +187,6 @@ public partial class Book_Analysis : Form
         cbCategoryLearn.Items.Clear();
 
         cbCategoryLearn.Items.AddRange(await ElasticSearchHelper.GetIndex());
-
 
 
     }
@@ -325,7 +326,7 @@ public partial class Book_Analysis : Form
         var result = ElasticSearchHelper.MoreLikeThisQuery(tbContentLearn.Text);
 
         var disRes = result.Select(a => new { a.topic, a.score }).Distinct().ToList();
-        var minRes = disRes.GroupBy(a => a.topic).Select(a => new { tp = a.Key, Avg = a.Sum(s => s.score) }).ToList();
+        var minRes = disRes.GroupBy(a => a.topic).Select(a => new { tp = a.Key, sum = a.Sum(s => s.score) }).ToList();
 
         if (result != null && disRes.Count > 0)
         {
@@ -334,10 +335,10 @@ public partial class Book_Analysis : Form
             //cbHeaderLearn.SelectedIndex = 0;
             //lbToicsLearn.Items.AddRange(result.OrderByDescending(a => a.score).Take(10).Select((a, b) => a.topic + "(" + a.score + ")").ToArray());
             //lbToicsLearn.Items.AddRange(disRes.OrderByDescending(a => a.score).Take(10).Select(a => a.header_topic.Substring(a.header_topic.IndexOf("_") + 1) + "(" + a.score + ")").ToArray());
-            var listtopic = minRes.OrderByDescending(a => a.Avg).Take(10).Select(a => a.tp + "(" + a.Avg + ")").ToArray();
+            var listtopic = minRes.OrderByDescending(a => a.sum).Take(10).Select(a => a.tp + "(" + a.sum + ")").ToArray();
             lbToicsLearn.Items.AddRange(listtopic);
-
-            tbTopicLearn.Text = listtopic.First();
+            var topic=listtopic.First();
+            tbTopicLearn.Text = topic.Contains("(") ? topic.Substring(0, topic.IndexOf("(")) : topic;
         }
 
 
@@ -364,6 +365,8 @@ public partial class Book_Analysis : Form
     private void cbCategoryLearn_SelectedIndexChanged(object sender, EventArgs e)
     {
         Global.IndexElastic = $"bookanalysis_{cbCategoryLearn.Text.ToLower()}";
+        lbAllTopicsLearn.Items.AddRange(ElasticSearchHelper.GetGroupAllFields(Global.IndexElastic,"topic.keyword"));
+
     }
 
     private void btnStartValidation_Click(object sender, EventArgs e)
@@ -405,11 +408,11 @@ public partial class Book_Analysis : Form
             var result = ElasticSearchHelper.MoreLikeThisQuery(tbContentTestVal.Text);
 
             var disRes = result.Select(a => new { a.topic, a.score }).Distinct().ToList();
-            var minRes = disRes.GroupBy(a => a.topic).Select(a => new { tp = a.Key, Avg = a.Sum(s => s.score) }).ToList();
+            var minRes = disRes.GroupBy(a => a.topic).Select(a => new { tp = a.Key, sum = a.Sum(s => s.score) }).ToList();
 
             if (result != null && disRes.Count > 0)
             {
-                lbTopicsTestval.Items.AddRange(minRes.OrderByDescending(a => a.Avg).Take(10).Select(a => a.tp + "(" + a.Avg + ")").ToArray());
+                lbTopicsTestval.Items.AddRange(minRes.OrderByDescending(a => a.sum).Take(10).Select(a => a.tp + "(" + a.sum + ")").ToArray());
             }
 
 
@@ -429,10 +432,12 @@ public partial class Book_Analysis : Form
         cbCategoryLearn.Items.Clear();
         cbCategoryValidation.Items.Clear();
         cbCategoryEdit.Items.Clear();
+        cbCategoryAnal.Items.Clear();
         var items = await ElasticSearchHelper.GetIndex();
         cbCategoryLearn.Items.AddRange(items);
         cbCategoryValidation.Items.AddRange(items);
         cbCategoryEdit.Items.AddRange(items);
+        cbCategoryAnal.Items.AddRange(items);
 
     }
 
@@ -441,27 +446,136 @@ public partial class Book_Analysis : Form
         Global.IndexElastic = $"bookanalysis_{cbCategoryValidation.Text.ToLower()}";
     }
 
-    private void btnGetKeyword_Click(object sender, EventArgs e)
+    private void btnStartAnalysis_Click(object sender, EventArgs e)
     {
-        var docs = ElasticSearchHelper.SearchAll(Global.IndexElastic);
-        long countData = docs.Count;
+        pbAnalysis.Visible = true;
+        lbKeywordAnal.Items.Clear();
+        lbTopicsAnal.Items.Clear();
+        lbBookAnal.Items.Clear();
+        tbmainTopicAnal.Text = "";
+        tbsimBookAnal.Text = "";
 
-        var ss = docs.Where(a => a.Value.topic == "سیاسی").ToList();
 
-        ConcurrentDictionary<string, double> keywords = new();
-        int i = 0;
-        //Parallel.ForEach(docs, (d => {
-        foreach (var d in ss)
+        List<BookLikeInfoModel> ScorsList = new List<BookLikeInfoModel>();
+        Dictionary<string,int> TopicPredictCount = new Dictionary<string, int>();
+        List<BookInfoModel> listdocs = new List<BookInfoModel>();
+
+        var topicsAll = ElasticSearchHelper.GetGroupAllFields(Global.IndexElastic, "topic.keyword");
+        foreach (var topic in topicsAll) { TopicPredictCount[topic] = 0; }
+        //Read the contents of the file into a stream
+        using (StreamReader reader = new StreamReader(tbPathFileAnal.Text))
         {
-            var keys = ElasticSearchHelper.TermVectors(countData, d.Key);
+            Analysis analysis = new Analysis();
 
-            foreach (var item in keys) keywords[item.Key] = item.Value;
-            i++;
+            var BookContent = reader.ReadToEnd();
+            //remove extra text and just paragraph and chapter and ...
+            //split paragraph 
+
+            var BookAnalysisDocs = BookContent.Split("\r\n");
+
+            //set pb
+            pbAnalysis.Maximum = BookAnalysisDocs.Length +10;
+            pbAnalysis.Step = 1;
+            pbAnalysis.Value = 5;
+
+
+            foreach (var text in BookAnalysisDocs)
+            {
+                pbAnalysis.Value += 1;
+
+                var text2 = analysis.PersianToEnglishNumber(text);
+                text2 = analysis.RemovePunctuations(text2);
+                text2 = analysis.RemoveNumber(text2);
+                text2 = analysis.RemoveEnterLine(text2);
+                if (text2 == "") 
+                    continue;
+
+
+
+
+                var result = ElasticSearchHelper.MoreLikeThisQuery(text2);
+                if (result == null || result.Count == 0) 
+                    continue;
+                var disRes = result.Select(a => new { a.topic, a.score }).Distinct().ToList();
+                var minRes = disRes.GroupBy(a => a.topic).Select(a => new { tp = a.Key, sum = a.Sum(s => s.score) }).ToList();
+
+                if (result != null && disRes.Count > 0)
+                {
+                    var listtopic = minRes.OrderByDescending(a => a.sum).Take(10).Select(a => a.tp ).ToArray();
+
+                    var topic = listtopic.First();
+                    TopicPredictCount[topic] ++;
+
+                    listdocs.Add(new BookInfoModel
+                    {
+                        bookname = tbBookNameAnal.Text,
+                        content = text2,
+                        publishdate = dtpPublishDateLearn.Value,
+                        topic = topic,
+                        eventdate = DateTime.Now,
+                    });
+
+                }
+                else
+                {
+
+                }
+
+
+
+                ScorsList.AddRange(result);
+
+
+            }
+
+            var textk = analysis.PersianToEnglishNumber(BookContent);
+            textk = analysis.RemovePunctuations(textk);
+            textk = analysis.RemoveNumber(textk);
+            lbKeywordAnal.Items.AddRange(analysis.KeyWordCalculate(textk, "\n"));
+            //tbBookLearn.Text = filename.Substring(0, filename.IndexOf("."));
+
         }
-        //);
 
 
-        var real = keywords.OrderByDescending(a => a.Value).Take(10).ToList();
+      
+        //topics
+        var sumDocs = TopicPredictCount.Values.Sum();
+        foreach (var tc in TopicPredictCount.OrderByDescending(a=>a.Value))
+        {
+            lbTopicsAnal.Items.Add("["+tc.Key+"]    ("+ (int)(((float)tc.Value/ sumDocs)*100)+"%)    "+tc.Value);
+        }
+
+        var books = ElasticSearchHelper.GetGroupAllFields(Global.IndexElastic, "bookname.keyword");
+
+        Dictionary<string, string[]?> bibib = new();
+        var TopicOfNewBook = TopicPredictCount.Where(a => a.Value > 1).Select(a => a.Key).ToList();
+        Dictionary<string, int> bookeSimilarPercent = new Dictionary<string, int>();
+        foreach (var book in books)
+        {
+            var topicCount_dic = ElasticSearchHelper.GetGroupAllFieldsByFilter(Global.IndexElastic, "topic.keyword", "bookname.keyword", book);
+            var alldoc = topicCount_dic.Sum(a=>a.Value);
+            int containDocsCount = 0;
+            foreach (var topic in topicCount_dic)
+            {
+                if (!TopicOfNewBook.Contains(topic.Key)) continue;
+
+                containDocsCount += topic.Value;
+            }
+            bookeSimilarPercent[book] = (int)(((float)containDocsCount / alldoc) * 100);
+            lbBookAnal.Items.Add("[" + book + "]    (" + (int)(((float)containDocsCount / alldoc) * 100) + "%)    " + containDocsCount);
+        }
+
+        //add to db new book
+        NewBookIds = ElasticSearchHelper.InsertData(listdocs.ToArray(), Global.IndexElastic);
+
+
+       
+
+        pbAnalysis.Value = pbAnalysis.Maximum;
+        tbmainTopicAnal.Text = TopicPredictCount.OrderByDescending(a => a.Value).First().Key;
+        tbBookNameAnal.Text = bookeSimilarPercent.OrderByDescending(a => a.Value).First().Key;
+        pbAnalysis.Visible = false ;
+
     }
 
     private void rbKfold_Click(object sender, EventArgs e)
@@ -630,12 +744,12 @@ public partial class Book_Analysis : Form
 
     private void cbBooknameEdit_Click(object sender, EventArgs e)
     {
-        cbBooknameEditSearch.Items.Clear(); cbBooknameEditSearch.Items.AddRange(ElasticSearchHelper.GetGroupByFields(Global.IndexElastic, "bookname.keyword"));
+        cbBooknameEditSearch.Items.Clear(); cbBooknameEditSearch.Items.AddRange(ElasticSearchHelper.GetGroupAllFields(Global.IndexElastic, "bookname.keyword"));
     }
 
     private void cbTopicEdit_Click(object sender, EventArgs e)
     {
-        cbTopicEditSearch.Items.Clear(); cbTopicEditSearch.Items.AddRange(ElasticSearchHelper.GetGroupByFields(Global.IndexElastic, "topic.keyword"));
+        cbTopicEditSearch.Items.Clear(); cbTopicEditSearch.Items.AddRange(ElasticSearchHelper.GetGroupAllFields(Global.IndexElastic, "topic.keyword"));
     }
 
     private void cbCategoryEdit_SelectedIndexChanged(object sender, EventArgs e)
@@ -646,14 +760,14 @@ public partial class Book_Analysis : Form
 
     private void btnSearchEdit_Click(object sender, EventArgs e)
     {
-        BookDocsEdit = ElasticSearchHelper.SearchFields(Global.IndexElastic, cbBooknameEditSearch.Text, cbTopicEditSearch.Text, tbContentEditSearch.Text);
+        //BookDocsEdit = ElasticSearchHelper.SearchFields(Global.IndexElastic, cbBooknameEditSearch.Text, cbTopicEditSearch.Text, tbContentEditSearch.Text);
 
-        if (BookDocsEdit.Count == 0) return;
-        tbBookNameEditRes.Text = BookDocsEdit[0].bookname;
-        tbTopicEditRes.Text = BookDocsEdit[0].topic;
-        dpPublisDateEditRes.Value = BookDocsEdit[0].publishdate;
-        dpEventDateEditRes.Value = BookDocsEdit[0].eventdate;
-        tbContentEditReult.Text = BookDocsEdit[0].content;
+        //if (BookDocsEdit.Count == 0) return;
+        //tbBookNameEditRes.Text = BookDocsEdit[0].bookname;
+        //tbTopicEditRes.Text = BookDocsEdit[0].topic;
+        //dpPublisDateEditRes.Value = BookDocsEdit[0].publishdate;
+        //dpEventDateEditRes.Value = BookDocsEdit[0].eventdate;
+        //tbContentEditReult.Text = BookDocsEdit[0].content;
 
 
         gbResultSearch.Enabled = true;
@@ -661,11 +775,85 @@ public partial class Book_Analysis : Form
 
     private void btnDashboard_Click(object sender, EventArgs e)
     {
-        Global.openBrowse("http://localhost:3000/d/wECO4Qi4z/bookanalysis");
+        Global.openBrowse($"http://localhost:3000/d/wECO4Qi4z/bookanalysis_{cbCategoryAnal.Text}?var-topic=All&var-book="+tbBookNameAnal.Text.Replace(" ","%20"));
     }
 
     private void lbToicsLearn_SelectedIndexChanged(object sender, EventArgs e)
     {
-        tbTopicLearn.Text=lbToicsLearn.SelectedItem.ToString();
+        var topic = lbToicsLearn.SelectedItem.ToString();
+        tbTopicLearn.Text = topic.Contains("(") ? topic.Substring(0, topic.IndexOf("(")) : topic;
+    }
+
+    private void lbAllTopicsLearn_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+        var topic = lbAllTopicsLearn.SelectedItem.ToString();
+        tbTopicLearn.Text = topic.Contains("(") ? topic.Substring(0, topic.IndexOf("(")) : topic;
+    }
+
+    private void cbCategoryAnal_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Global.IndexElastic = $"bookanalysis_{cbCategoryAnal.Text.ToLower()}";
+
+    }
+
+    private void btnBrowseAnal_Click(object sender, EventArgs e)
+    {
+        //var fileContent = string.Empty;
+        var filePath = string.Empty;
+
+        using (OpenFileDialog openFileDialog = new OpenFileDialog())
+        {
+            openFileDialog.Filter = "txt files (*.txt)|*.txt|csv files (*.csv)|*.csv|All files (*.*)|*.*";
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+            openFileDialog.Title = "Choose Book file";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                //Get the path of specified file
+                filePath = openFileDialog.FileName;
+
+                //Read the contents of the file into a stream
+                //var fileStream = openFileDialog.OpenFile();
+
+                //using (StreamReader reader = new StreamReader(fileStream))
+                //{
+                //    fileContent = reader.ReadToEnd();
+                //}
+            }
+        }
+
+        tbPathFileAnal.Text = filePath;
+    }
+
+    private void btnAcceptAnal_Click(object sender, EventArgs e)
+    {
+        // add and learn this book
+        if (NewBookIds is null || NewBookIds.Length == 0)
+            MessageBox.Show("Not analysis new Book", "Accept Book", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        else
+        {
+            NewBookIds = null;
+                MessageBox.Show("Book accepted", "Accept Book", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+    }
+
+    private void btnRejectAnal_Click(object sender, EventArgs e)
+    {
+        if (NewBookIds is null || NewBookIds.Length == 0)
+            MessageBox.Show("Not analysis new Book" , "Reject Book" ,MessageBoxButtons.OK ,MessageBoxIcon.Error);
+        else
+        {
+
+        foreach (var id in NewBookIds)
+        {
+            ElasticSearchHelper.DeleteDoc(Global.IndexElastic ,id);
+        }
+        NewBookIds = null;
+            MessageBox.Show("Book rejected", "Reject Book", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
     }
 }
