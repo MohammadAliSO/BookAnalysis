@@ -339,7 +339,19 @@ public partial class Book_Analysis : Form
             lbToicsLearn.Items.AddRange(listtopic);
             var topic=listtopic.First();
             tbTopicLearn.Text = topic.Contains("(") ? topic.Substring(0, topic.IndexOf("(")) : topic;
+            if(listtopic.Count() > 5 || (minRes.OrderByDescending(a => a.sum).First().sum < 1000))
+            {
+                tbTopicLearn.Text = "unknown";
+            }
+
         }
+        else
+        {
+            tbTopicLearn.Text = "unknown";
+
+        }
+
+
 
 
         Analysis analysis = new Analysis();
@@ -462,6 +474,7 @@ public partial class Book_Analysis : Form
 
         var topicsAll = ElasticSearchHelper.GetGroupAllFields(Global.IndexElastic, "topic.keyword");
         foreach (var topic in topicsAll) { TopicPredictCount[topic] = 0; }
+        TopicPredictCount.Add("unknown",0);
         //Read the contents of the file into a stream
         using (StreamReader reader = new StreamReader(tbPathFileAnal.Text))
         {
@@ -504,7 +517,10 @@ public partial class Book_Analysis : Form
                     var listtopic = minRes.OrderByDescending(a => a.sum).Take(10).Select(a => a.tp ).ToArray();
 
                     var topic = listtopic.First();
-                    TopicPredictCount[topic] ++;
+                    if (listtopic.Count() > 5 || (minRes.OrderByDescending(a => a.sum).First().sum < 1000))
+                        TopicPredictCount["unknown"]++;
+                    else TopicPredictCount[topic]++;
+
 
                     listdocs.Add(new BookInfoModel
                     {
@@ -518,7 +534,7 @@ public partial class Book_Analysis : Form
                 }
                 else
                 {
-
+                    TopicPredictCount["unknown"]++;
                 }
 
 
@@ -548,6 +564,7 @@ public partial class Book_Analysis : Form
         var books = ElasticSearchHelper.GetGroupAllFields(Global.IndexElastic, "bookname.keyword");
 
         Dictionary<string, string[]?> bibib = new();
+        TopicPredictCount.Remove("unknown");
         var TopicOfNewBook = TopicPredictCount.Where(a => a.Value > 1).Select(a => a.Key).ToList();
         Dictionary<string, int> bookeSimilarPercent = new Dictionary<string, int>();
         foreach (var book in books)
@@ -573,7 +590,7 @@ public partial class Book_Analysis : Form
 
         pbAnalysis.Value = pbAnalysis.Maximum;
         tbmainTopicAnal.Text = TopicPredictCount.OrderByDescending(a => a.Value).First().Key;
-        tbBookNameAnal.Text = bookeSimilarPercent.OrderByDescending(a => a.Value).First().Key;
+        tbsimBookAnal.Text = bookeSimilarPercent.OrderByDescending(a => a.Value).First().Key;
         pbAnalysis.Visible = false ;
 
     }
