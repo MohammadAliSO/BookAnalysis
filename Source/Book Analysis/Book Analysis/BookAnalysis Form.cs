@@ -10,9 +10,14 @@ public partial class Book_Analysis : Form
 
     static string[]? BookDocs;
     static List<BookInfoModel>? BookDocsEdit;
+    static List<BookLikeInfoModel>? DataTermDocs = null;
+
     static int offsetDoc = 0;
     static int offsetDocEdit = 0;
+    static int offsetDocTerm = 0;
+
     static string[]? NewBookIds=null;
+    static string[]? TopicTermDocs = null;
 
     public Book_Analysis()
     {
@@ -141,6 +146,16 @@ public partial class Book_Analysis : Form
 
         return CrossVal;
     }
+    public void AppendText(RichTextBox box, string text, Color color)
+    {
+        box.SelectionStart = box.TextLength;
+        box.SelectionLength = 0;
+
+        //box.SelectionColor = color;
+        box.SelectionBackColor = color;
+        box.AppendText(text);
+        //box.SelectionColor = box.ForeColor;
+    }
 
     public string GetDoc()
     {
@@ -178,7 +193,7 @@ public partial class Book_Analysis : Form
         return doc;
     }
 
-
+   
 
     private async void Book_Analysis_Load(object sender, EventArgs e)
     {
@@ -445,11 +460,13 @@ public partial class Book_Analysis : Form
         cbCategoryValidation.Items.Clear();
         cbCategoryEdit.Items.Clear();
         cbCategoryAnal.Items.Clear();
+        cbCategoryTermAnal.Items.Clear();
         var items = await ElasticSearchHelper.GetIndex();
         cbCategoryLearn.Items.AddRange(items);
         cbCategoryValidation.Items.AddRange(items);
         cbCategoryEdit.Items.AddRange(items);
         cbCategoryAnal.Items.AddRange(items);
+        cbCategoryTermAnal.Items.AddRange(items);
 
     }
 
@@ -564,8 +581,10 @@ public partial class Book_Analysis : Form
         var books = ElasticSearchHelper.GetGroupAllFields(Global.IndexElastic, "bookname.keyword");
 
         Dictionary<string, string[]?> bibib = new();
+
+
         TopicPredictCount.Remove("unknown");
-        var TopicOfNewBook = TopicPredictCount.Where(a => a.Value > 1).Select(a => a.Key).ToList();
+        var TopicOfNewBook = TopicPredictCount.Where(a => (int)(((float)a.Value / sumDocs) * 100) > 5).Select(a => a.Key).ToList();
         Dictionary<string, int> bookeSimilarPercent = new Dictionary<string, int>();
         foreach (var book in books)
         {
@@ -574,7 +593,8 @@ public partial class Book_Analysis : Form
             int containDocsCount = 0;
             foreach (var topic in topicCount_dic)
             {
-                if (!TopicOfNewBook.Contains(topic.Key)) continue;
+
+                if (!TopicOfNewBook.Contains(topic.Key) || ((int)(((float)topic.Value / alldoc) * 100))<5) continue;
 
                 containDocsCount += topic.Value;
             }
@@ -872,5 +892,92 @@ public partial class Book_Analysis : Form
             MessageBox.Show("Book rejected", "Reject Book", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+    }
+
+    private void cbBooknameTermAnal_Click(object sender, EventArgs e)
+    {
+        cbBooknameTermAnal.Items.Clear(); cbBooknameTermAnal.Items.AddRange(ElasticSearchHelper.GetGroupAllFields(Global.IndexElastic, "bookname.keyword"));
+
+    }
+
+    private void cbCategoryTermAnal_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Global.IndexElastic = $"bookanalysis_{cbCategoryTermAnal.Text.ToLower()}";
+
+    }
+
+    private void btnStartTermAnal_Click(object sender, EventArgs e)
+    {
+        tbContentTermAnal.Text = "";
+
+        lbTopicsTermAnal.Items.Clear();
+        if ( DataTermDocs is not null) DataTermDocs.Clear();
+        var data = ElasticSearchHelper.SearchTermByBookName(Global.IndexElastic, cbBooknameTermAnal.Text, tbSearchTermAnal.Text);
+
+
+
+        var topicCounts = data.Select(a => new { tp=a.topic,count=1 }).GroupBy(a => a.tp).Select(a => new { tp = a.Key, count = a.Sum(s => s.count) }).ToList();
+
+        foreach (var item in topicCounts)
+        {
+            lbTopicsTermAnal.Items.Add("[" + item.tp + "]    (" + (int)(((float)item.count / data.Count) * 100) + "%)    " + item.count);
+
+        }
+
+        DataTermDocs = data;
+    }
+
+    private void lbTopicsTermAnal_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        tbContentTermAnal.Text = "";
+
+        offsetDocTerm = 0;
+        TopicTermDocs = null;
+        var selecitem = lbTopicsTermAnal.SelectedItem.ToString();
+        var topic = selecitem.Substring(selecitem.IndexOf("[")+1, selecitem.LastIndexOf("]")-1);
+
+        TopicTermDocs = DataTermDocs.Where(a => a.topic == topic).Select(a => a.content).ToArray();
+
+        var texts = TopicTermDocs[0].Split(tbSearchTermAnal.Text.TrimEnd().TrimStart());
+        for(int i=0;i<texts.Length;i++)
+        {
+            AppendText(tbContentTermAnal, texts[i], Color.White);
+            if (i != texts.Length - 1) AppendText(tbContentTermAnal, tbSearchTermAnal.Text, Color.Yellow);
+        }
+
+    }
+
+    private void btnNextTermAnal_Click(object sender, EventArgs e)
+    {
+        if (offsetDocTerm == TopicTermDocs.Count() - 1)
+        {
+            MessageBox.Show("End Of Docs!", "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+        tbContentTermAnal.Text ="";
+        offsetDocTerm++;
+        var texts = TopicTermDocs[offsetDocTerm].Split(tbSearchTermAnal.Text.TrimEnd().TrimStart());
+        for (int i = 0; i < texts.Length; i++)
+        {
+            AppendText(tbContentTermAnal, texts[i], Color.White);
+            if (i != texts.Length - 1) AppendText(tbContentTermAnal, tbSearchTermAnal.Text, Color.Yellow);
+        }
+    }
+
+    private void btnPrevTermAnal_Click(object sender, EventArgs e)
+    {
+        if (offsetDocTerm == 0)
+        {
+            MessageBox.Show("Start Of Docs!", "INFO", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+        tbContentTermAnal.Text = "";
+        offsetDocTerm--;
+        var texts = TopicTermDocs[offsetDocTerm].Split(tbSearchTermAnal.Text.TrimEnd().TrimStart());
+        for (int i = 0; i < texts.Length; i++)
+        {
+            AppendText(tbContentTermAnal, texts[i], Color.White);
+            if (i != texts.Length - 1) AppendText(tbContentTermAnal, tbSearchTermAnal.Text, Color.Yellow);
+        }
     }
 }

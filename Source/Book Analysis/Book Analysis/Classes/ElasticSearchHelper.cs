@@ -16,7 +16,27 @@ namespace Book_Analysis.Classes
             return new ElasticClient(settings);
         }
 
+        public static long GetCount(string IndexName, string BookName)
+        {
+            using (var client = new RestClient($"{Config.All.ElasticSearch.Address}/{IndexName}/_count"))
+            {
 
+                var request = new RestRequest($"{Config.All.ElasticSearch.Address}/{IndexName}/_count", Method.Post);
+                request.AddHeader("Content-Type", "application/json");
+
+                var body = "{\r\n  \"query\" : {\r\n    \"term\" : { \"bookname.keyword\" : \"@bookname\" }\r\n  }\r\n}";
+                body = body.Replace("@bookname", BookName);
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                var res = client.Execute(request);
+
+                MoreLikeThisQueryResponse result = JsonConvert.DeserializeObject<MoreLikeThisQueryResponse>(res.Content);
+
+
+                CountResponse? count = JsonConvert.DeserializeObject <CountResponse?> (res.Content);
+
+            return count.Count;
+            }
+        }
         public static long GetCount(string Index)
         {
             var elasticClient = CreateConnection();
@@ -441,6 +461,45 @@ namespace Book_Analysis.Classes
             return result.ToList();
 
 
+        }
+
+
+
+        public static List<BookLikeInfoModel> SearchTermByBookName(string IndexName , string BookName , string Content)
+        {
+            using (var client = new RestClient($"{Config.All.ElasticSearch.Address}/{IndexName}/_search"))
+            {
+
+                var request = new RestRequest($"{Config.All.ElasticSearch.Address}/{IndexName}/_search", Method.Post);
+                request.AddHeader("Content-Type", "application/json");
+
+                var body = "{\r\n  \"query\": {\r\n    \"bool\": {\r\n      \"must\": [],\r\n      \"filter\": [\r\n        {\r\n          \"bool\": {\r\n            \"should\": [\r\n              {\r\n                \"match_phrase\": {\r\n                  \"bookname.keyword\": \"@bookname\"\r\n                }\r\n              }\r\n            ],\r\n            \"minimum_should_match\": 1\r\n          }\r\n        },\r\n              {\r\n                \"bool\": {\r\n                  \"should\": [\r\n                    {\r\n                      \"match_phrase\": {\r\n                        \"content\": \"@content\"\r\n                      }\r\n                    }\r\n                  ],\r\n                  \"minimum_should_match\": 1\r\n                }\r\n              }\r\n      ],\r\n      \"should\": [],\r\n      \"must_not\": []\r\n    }\r\n  }\r\n}";
+                body = body.Replace("@bookname", BookName).Replace("@content", Content);
+                request.AddParameter("application/json", body, ParameterType.RequestBody);
+                var res = client.Execute(request);
+
+                MoreLikeThisQueryResponse result = JsonConvert.DeserializeObject<MoreLikeThisQueryResponse>(res.Content);
+
+                List<BookLikeInfoModel> data = new List<BookLikeInfoModel>();
+                foreach (var hit in result.hits.hits)
+                {
+                    data.Add(new BookLikeInfoModel
+                    {
+                        bookname = hit._source.bookname,
+                        //header = hit._source.header,
+                        publishdate = hit._source.publishdate,
+                        content = hit._source.content,
+                        topic = hit._source.topic,
+                        //header_topic = hit._source.header_topic,
+                        eventdate = hit._source.eventdate,
+                        score = hit._score,
+                        id = hit._id
+                    });
+
+                }
+                return data;
+
+            }
         }
     }
 }

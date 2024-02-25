@@ -55,7 +55,6 @@
             this.lbKeywords = new System.Windows.Forms.ListBox();
             this.label27 = new System.Windows.Forms.Label();
             this.labelytyt = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.gbInfoLearn = new System.Windows.Forms.GroupBox();
             this.dtpPublishDateLearn = new System.Windows.Forms.DateTimePicker();
             this.labelcca = new System.Windows.Forms.Label();
@@ -108,8 +107,6 @@
             this.label29 = new System.Windows.Forms.Label();
             this.label28 = new System.Windows.Forms.Label();
             this.tbContentTestVal = new System.Windows.Forms.RichTextBox();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
             this.gbTestFile = new System.Windows.Forms.GroupBox();
             this.label26 = new System.Windows.Forms.Label();
             this.tbKappaScore = new System.Windows.Forms.TextBox();
@@ -162,6 +159,21 @@
             this.label17 = new System.Windows.Forms.Label();
             this.cbCategoryEdit = new System.Windows.Forms.ComboBox();
             this.label16 = new System.Windows.Forms.Label();
+            this.text = new System.Windows.Forms.TabPage();
+            this.btnPrevTermAnal = new System.Windows.Forms.Button();
+            this.btnNextTermAnal = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
+            this.tbContentTermAnal = new System.Windows.Forms.RichTextBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.lbTopicsTermAnal = new System.Windows.Forms.ListBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.tbSearchTermAnal = new System.Windows.Forms.RichTextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.btnStartTermAnal = new System.Windows.Forms.Button();
+            this.cbBooknameTermAnal = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.cbCategoryTermAnal = new System.Windows.Forms.ComboBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabControl.SuspendLayout();
             this.tabLearn.SuspendLayout();
@@ -184,6 +196,9 @@
             this.tabEdit.SuspendLayout();
             this.gbResultSearch.SuspendLayout();
             this.groupBox5.SuspendLayout();
+            this.text.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.groupBox8.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabSelector
@@ -206,12 +221,13 @@
             this.tabControl.Controls.Add(this.tabAnalysis);
             this.tabControl.Controls.Add(this.tabPage1);
             this.tabControl.Controls.Add(this.tabEdit);
+            this.tabControl.Controls.Add(this.text);
             this.tabControl.Depth = 0;
             this.tabControl.Location = new System.Drawing.Point(2, 65);
             this.tabControl.MouseState = MaterialSkin.MouseState.HOVER;
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1071, 784);
+            this.tabControl.Size = new System.Drawing.Size(1071, 727);
             this.tabControl.TabIndex = 2;
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
@@ -238,7 +254,7 @@
             this.tabLearn.Location = new System.Drawing.Point(4, 24);
             this.tabLearn.Name = "tabLearn";
             this.tabLearn.Padding = new System.Windows.Forms.Padding(3);
-            this.tabLearn.Size = new System.Drawing.Size(1063, 756);
+            this.tabLearn.Size = new System.Drawing.Size(1063, 699);
             this.tabLearn.TabIndex = 0;
             this.tabLearn.Text = "Learn";
             this.tabLearn.DragDrop += new System.Windows.Forms.DragEventHandler(this.tabLearn_DragDrop);
@@ -247,7 +263,7 @@
             // btnAddCategoryLearn
             // 
             this.btnAddCategoryLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnAddCategoryLearn.Location = new System.Drawing.Point(407, 22);
+            this.btnAddCategoryLearn.Location = new System.Drawing.Point(407, 5);
             this.btnAddCategoryLearn.Name = "btnAddCategoryLearn";
             this.btnAddCategoryLearn.Size = new System.Drawing.Size(37, 23);
             this.btnAddCategoryLearn.TabIndex = 9;
@@ -261,7 +277,7 @@
             this.gbBulkLearn.Controls.Add(this.PathlalaFile);
             this.gbBulkLearn.Controls.Add(this.tbPathImportLearn);
             this.gbBulkLearn.Controls.Add(this.btnBrowsImport);
-            this.gbBulkLearn.Location = new System.Drawing.Point(4, 51);
+            this.gbBulkLearn.Location = new System.Drawing.Point(4, 34);
             this.gbBulkLearn.Name = "gbBulkLearn";
             this.gbBulkLearn.Size = new System.Drawing.Size(1056, 103);
             this.gbBulkLearn.TabIndex = 29;
@@ -306,7 +322,7 @@
             // 
             this.rbImportLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.rbImportLearn.AutoSize = true;
-            this.rbImportLearn.Location = new System.Drawing.Point(790, 26);
+            this.rbImportLearn.Location = new System.Drawing.Point(790, 10);
             this.rbImportLearn.Name = "rbImportLearn";
             this.rbImportLearn.Size = new System.Drawing.Size(93, 19);
             this.rbImportLearn.TabIndex = 32;
@@ -318,7 +334,7 @@
             // 
             this.cbCategoryLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.cbCategoryLearn.FormattingEnabled = true;
-            this.cbCategoryLearn.Location = new System.Drawing.Point(91, 22);
+            this.cbCategoryLearn.Location = new System.Drawing.Point(91, 5);
             this.cbCategoryLearn.Name = "cbCategoryLearn";
             this.cbCategoryLearn.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.cbCategoryLearn.Size = new System.Drawing.Size(310, 23);
@@ -329,7 +345,7 @@
             // 
             this.labelwer.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.labelwer.AutoSize = true;
-            this.labelwer.Location = new System.Drawing.Point(27, 26);
+            this.labelwer.Location = new System.Drawing.Point(27, 10);
             this.labelwer.Name = "labelwer";
             this.labelwer.Size = new System.Drawing.Size(58, 15);
             this.labelwer.TabIndex = 26;
@@ -340,7 +356,7 @@
             this.rbReadBookLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.rbReadBookLearn.AutoSize = true;
             this.rbReadBookLearn.Checked = true;
-            this.rbReadBookLearn.Location = new System.Drawing.Point(683, 26);
+            this.rbReadBookLearn.Location = new System.Drawing.Point(683, 10);
             this.rbReadBookLearn.Name = "rbReadBookLearn";
             this.rbReadBookLearn.Size = new System.Drawing.Size(81, 19);
             this.rbReadBookLearn.TabIndex = 31;
@@ -352,7 +368,7 @@
             // btnPrev10Learn
             // 
             this.btnPrev10Learn.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnPrev10Learn.Location = new System.Drawing.Point(198, 683);
+            this.btnPrev10Learn.Location = new System.Drawing.Point(198, 634);
             this.btnPrev10Learn.Name = "btnPrev10Learn";
             this.btnPrev10Learn.Size = new System.Drawing.Size(75, 23);
             this.btnPrev10Learn.TabIndex = 30;
@@ -365,7 +381,7 @@
             // 
             this.btnNext10Learn.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnNext10Learn.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.btnNext10Learn.Location = new System.Drawing.Point(713, 683);
+            this.btnNext10Learn.Location = new System.Drawing.Point(713, 634);
             this.btnNext10Learn.Name = "btnNext10Learn";
             this.btnNext10Learn.Size = new System.Drawing.Size(75, 23);
             this.btnNext10Learn.TabIndex = 29;
@@ -377,7 +393,7 @@
             // btnAddNextLearn
             // 
             this.btnAddNextLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnAddNextLearn.Location = new System.Drawing.Point(794, 683);
+            this.btnAddNextLearn.Location = new System.Drawing.Point(794, 634);
             this.btnAddNextLearn.Name = "btnAddNextLearn";
             this.btnAddNextLearn.Size = new System.Drawing.Size(75, 23);
             this.btnAddNextLearn.TabIndex = 28;
@@ -389,7 +405,7 @@
             // btnPrevLearn
             // 
             this.btnPrevLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnPrevLearn.Location = new System.Drawing.Point(279, 683);
+            this.btnPrevLearn.Location = new System.Drawing.Point(279, 634);
             this.btnPrevLearn.Name = "btnPrevLearn";
             this.btnPrevLearn.Size = new System.Drawing.Size(75, 23);
             this.btnPrevLearn.TabIndex = 27;
@@ -402,7 +418,7 @@
             // 
             this.btnNextLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnNextLearn.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.btnNextLearn.Location = new System.Drawing.Point(632, 683);
+            this.btnNextLearn.Location = new System.Drawing.Point(632, 634);
             this.btnNextLearn.Name = "btnNextLearn";
             this.btnNextLearn.Size = new System.Drawing.Size(75, 23);
             this.btnNextLearn.TabIndex = 26;
@@ -421,9 +437,8 @@
             this.gbAnalysisLearn.Controls.Add(this.lbKeywords);
             this.gbAnalysisLearn.Controls.Add(this.label27);
             this.gbAnalysisLearn.Controls.Add(this.labelytyt);
-            this.gbAnalysisLearn.Controls.Add(this.button1);
             this.gbAnalysisLearn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gbAnalysisLearn.Location = new System.Drawing.Point(3, 498);
+            this.gbAnalysisLearn.Location = new System.Drawing.Point(4, 446);
             this.gbAnalysisLearn.Name = "gbAnalysisLearn";
             this.gbAnalysisLearn.Size = new System.Drawing.Size(1057, 169);
             this.gbAnalysisLearn.TabIndex = 25;
@@ -508,16 +523,6 @@
             this.labelytyt.TabIndex = 23;
             this.labelytyt.Text = "Topics:";
             // 
-            // button1
-            // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.Location = new System.Drawing.Point(1553, 22);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(37, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "...";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // gbInfoLearn
             // 
             this.gbInfoLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -527,9 +532,9 @@
             this.gbInfoLearn.Controls.Add(this.tbBookLearn);
             this.gbInfoLearn.Controls.Add(this.tbContentLearn);
             this.gbInfoLearn.Controls.Add(this.labelopbb);
-            this.gbInfoLearn.Location = new System.Drawing.Point(4, 155);
+            this.gbInfoLearn.Location = new System.Drawing.Point(4, 139);
             this.gbInfoLearn.Name = "gbInfoLearn";
-            this.gbInfoLearn.Size = new System.Drawing.Size(1057, 343);
+            this.gbInfoLearn.Size = new System.Drawing.Size(1057, 301);
             this.gbInfoLearn.TabIndex = 24;
             this.gbInfoLearn.TabStop = false;
             this.gbInfoLearn.Text = "Information";
@@ -545,7 +550,7 @@
             // labelcca
             // 
             this.labelcca.AutoSize = true;
-            this.labelcca.Location = new System.Drawing.Point(10, 71);
+            this.labelcca.Location = new System.Drawing.Point(10, 46);
             this.labelcca.Name = "labelcca";
             this.labelcca.Size = new System.Drawing.Size(53, 15);
             this.labelcca.TabIndex = 23;
@@ -574,10 +579,10 @@
             this.tbContentLearn.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tbContentLearn.Location = new System.Drawing.Point(10, 89);
+            this.tbContentLearn.Location = new System.Drawing.Point(10, 64);
             this.tbContentLearn.Name = "tbContentLearn";
             this.tbContentLearn.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.tbContentLearn.Size = new System.Drawing.Size(1043, 245);
+            this.tbContentLearn.Size = new System.Drawing.Size(1043, 231);
             this.tbContentLearn.TabIndex = 8;
             this.tbContentLearn.Text = "";
             this.tbContentLearn.TextChanged += new System.EventHandler(this.tbContentLearn_TextChanged);
@@ -594,7 +599,7 @@
             // btnPredict
             // 
             this.btnPredict.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnPredict.Location = new System.Drawing.Point(388, 683);
+            this.btnPredict.Location = new System.Drawing.Point(388, 634);
             this.btnPredict.Name = "btnPredict";
             this.btnPredict.Size = new System.Drawing.Size(209, 23);
             this.btnPredict.TabIndex = 23;
@@ -605,7 +610,7 @@
             // btnLearn
             // 
             this.btnLearn.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnLearn.Location = new System.Drawing.Point(279, 711);
+            this.btnLearn.Location = new System.Drawing.Point(279, 662);
             this.btnLearn.Name = "btnLearn";
             this.btnLearn.Size = new System.Drawing.Size(428, 23);
             this.btnLearn.TabIndex = 9;
@@ -621,7 +626,7 @@
             this.gbbookFileLearn.Controls.Add(this.btnBrowsBookFile);
             this.gbbookFileLearn.Controls.Add(this.btnReadBook);
             this.gbbookFileLearn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gbbookFileLearn.Location = new System.Drawing.Point(3, 51);
+            this.gbbookFileLearn.Location = new System.Drawing.Point(3, 34);
             this.gbbookFileLearn.Name = "gbbookFileLearn";
             this.gbbookFileLearn.Size = new System.Drawing.Size(1057, 97);
             this.gbbookFileLearn.TabIndex = 7;
@@ -678,14 +683,14 @@
             this.tabAnalysis.Location = new System.Drawing.Point(4, 24);
             this.tabAnalysis.Name = "tabAnalysis";
             this.tabAnalysis.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAnalysis.Size = new System.Drawing.Size(1063, 756);
+            this.tabAnalysis.Size = new System.Drawing.Size(1063, 699);
             this.tabAnalysis.TabIndex = 1;
             this.tabAnalysis.Text = "Analysis";
             // 
             // pbAnalysis
             // 
             this.pbAnalysis.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.pbAnalysis.Location = new System.Drawing.Point(403, 169);
+            this.pbAnalysis.Location = new System.Drawing.Point(403, 140);
             this.pbAnalysis.Name = "pbAnalysis";
             this.pbAnalysis.Size = new System.Drawing.Size(241, 10);
             this.pbAnalysis.TabIndex = 34;
@@ -704,9 +709,9 @@
             this.groupBox2.Controls.Add(this.groupBox7);
             this.groupBox2.Controls.Add(this.groupBox6);
             this.groupBox2.Controls.Add(this.groupBox3);
-            this.groupBox2.Location = new System.Drawing.Point(4, 173);
+            this.groupBox2.Location = new System.Drawing.Point(4, 145);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(1050, 577);
+            this.groupBox2.Size = new System.Drawing.Size(1050, 554);
             this.groupBox2.TabIndex = 33;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Result";
@@ -714,7 +719,7 @@
             // btnRejectAnal
             // 
             this.btnRejectAnal.BackColor = System.Drawing.Color.Pink;
-            this.btnRejectAnal.Location = new System.Drawing.Point(509, 516);
+            this.btnRejectAnal.Location = new System.Drawing.Point(509, 487);
             this.btnRejectAnal.Name = "btnRejectAnal";
             this.btnRejectAnal.Size = new System.Drawing.Size(132, 23);
             this.btnRejectAnal.TabIndex = 41;
@@ -725,7 +730,7 @@
             // btnAcceptAnal
             // 
             this.btnAcceptAnal.BackColor = System.Drawing.Color.PaleGreen;
-            this.btnAcceptAnal.Location = new System.Drawing.Point(375, 516);
+            this.btnAcceptAnal.Location = new System.Drawing.Point(375, 487);
             this.btnAcceptAnal.Name = "btnAcceptAnal";
             this.btnAcceptAnal.Size = new System.Drawing.Size(132, 23);
             this.btnAcceptAnal.TabIndex = 40;
@@ -735,7 +740,7 @@
             // 
             // btnDashboard
             // 
-            this.btnDashboard.Location = new System.Drawing.Point(375, 488);
+            this.btnDashboard.Location = new System.Drawing.Point(375, 459);
             this.btnDashboard.Name = "btnDashboard";
             this.btnDashboard.Size = new System.Drawing.Size(266, 23);
             this.btnDashboard.TabIndex = 39;
@@ -745,7 +750,7 @@
             // 
             // tbsimBookAnal
             // 
-            this.tbsimBookAnal.Location = new System.Drawing.Point(501, 407);
+            this.tbsimBookAnal.Location = new System.Drawing.Point(509, 408);
             this.tbsimBookAnal.Name = "tbsimBookAnal";
             this.tbsimBookAnal.ReadOnly = true;
             this.tbsimBookAnal.Size = new System.Drawing.Size(174, 23);
@@ -753,7 +758,7 @@
             // 
             // tbmainTopicAnal
             // 
-            this.tbmainTopicAnal.Location = new System.Drawing.Point(114, 408);
+            this.tbmainTopicAnal.Location = new System.Drawing.Point(121, 408);
             this.tbmainTopicAnal.Name = "tbmainTopicAnal";
             this.tbmainTopicAnal.ReadOnly = true;
             this.tbmainTopicAnal.Size = new System.Drawing.Size(180, 23);
@@ -854,9 +859,9 @@
             this.groupBox1.Controls.Add(this.labelvc);
             this.groupBox1.Controls.Add(this.labelew);
             this.groupBox1.Controls.Add(this.tbBookNameAnal);
-            this.groupBox1.Location = new System.Drawing.Point(4, 6);
+            this.groupBox1.Location = new System.Drawing.Point(4, 0);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(1050, 132);
+            this.groupBox1.Size = new System.Drawing.Size(1050, 110);
             this.groupBox1.TabIndex = 32;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Book Info";
@@ -951,7 +956,7 @@
             // btnStartAnalysis
             // 
             this.btnStartAnalysis.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnStartAnalysis.Location = new System.Drawing.Point(402, 144);
+            this.btnStartAnalysis.Location = new System.Drawing.Point(402, 116);
             this.btnStartAnalysis.Name = "btnStartAnalysis";
             this.btnStartAnalysis.Size = new System.Drawing.Size(243, 23);
             this.btnStartAnalysis.TabIndex = 0;
@@ -975,7 +980,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 24);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1063, 756);
+            this.tabPage1.Size = new System.Drawing.Size(1063, 699);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Valdation";
             // 
@@ -989,12 +994,10 @@
             this.gbTestVal.Controls.Add(this.groupBox4);
             this.gbTestVal.Controls.Add(this.label28);
             this.gbTestVal.Controls.Add(this.tbContentTestVal);
-            this.gbTestVal.Controls.Add(this.button8);
-            this.gbTestVal.Controls.Add(this.button9);
             this.gbTestVal.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gbTestVal.Location = new System.Drawing.Point(5, 111);
+            this.gbTestVal.Location = new System.Drawing.Point(5, 110);
             this.gbTestVal.Name = "gbTestVal";
-            this.gbTestVal.Size = new System.Drawing.Size(1056, 625);
+            this.gbTestVal.Size = new System.Drawing.Size(1056, 589);
             this.gbTestVal.TabIndex = 37;
             this.gbTestVal.TabStop = false;
             this.gbTestVal.Text = "Test";
@@ -1004,7 +1007,7 @@
             // 
             this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(98, 433);
+            this.label4.Location = new System.Drawing.Point(105, 397);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(43, 15);
             this.label4.TabIndex = 37;
@@ -1014,7 +1017,7 @@
             // 
             this.label3.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(606, 433);
+            this.label3.Location = new System.Drawing.Point(598, 397);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(61, 15);
             this.label3.TabIndex = 36;
@@ -1026,7 +1029,7 @@
             this.lbKeywordVal.FormattingEnabled = true;
             this.lbKeywordVal.HorizontalScrollbar = true;
             this.lbKeywordVal.ItemHeight = 15;
-            this.lbKeywordVal.Location = new System.Drawing.Point(673, 433);
+            this.lbKeywordVal.Location = new System.Drawing.Point(670, 397);
             this.lbKeywordVal.Name = "lbKeywordVal";
             this.lbKeywordVal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.lbKeywordVal.SelectionMode = System.Windows.Forms.SelectionMode.None;
@@ -1039,7 +1042,7 @@
             this.lbTopicsTestval.FormattingEnabled = true;
             this.lbTopicsTestval.HorizontalScrollbar = true;
             this.lbTopicsTestval.ItemHeight = 15;
-            this.lbTopicsTestval.Location = new System.Drawing.Point(165, 433);
+            this.lbTopicsTestval.Location = new System.Drawing.Point(166, 397);
             this.lbTopicsTestval.Name = "lbTopicsTestval";
             this.lbTopicsTestval.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.lbTopicsTestval.SelectionMode = System.Windows.Forms.SelectionMode.None;
@@ -1052,18 +1055,19 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.label30);
             this.groupBox4.Controls.Add(this.label29);
-            this.groupBox4.Location = new System.Drawing.Point(22, 855);
+            this.groupBox4.Location = new System.Drawing.Point(-6055, 819);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(1238, 216);
+            this.groupBox4.Size = new System.Drawing.Size(6492, 216);
             this.groupBox4.TabIndex = 26;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Anaysis";
+            this.groupBox4.Visible = false;
             // 
             // label30
             // 
             this.label30.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.label30.AutoSize = true;
-            this.label30.Location = new System.Drawing.Point(0, 0);
+            this.label30.Location = new System.Drawing.Point(3313, 0);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(61, 15);
             this.label30.TabIndex = 33;
@@ -1082,7 +1086,7 @@
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(4, 28);
+            this.label28.Location = new System.Drawing.Point(6, 18);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(53, 15);
             this.label28.TabIndex = 25;
@@ -1091,32 +1095,12 @@
             // tbContentTestVal
             // 
             this.tbContentTestVal.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.tbContentTestVal.Location = new System.Drawing.Point(11, 53);
+            this.tbContentTestVal.Location = new System.Drawing.Point(11, 35);
             this.tbContentTestVal.Name = "tbContentTestVal";
             this.tbContentTestVal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.tbContentTestVal.Size = new System.Drawing.Size(1039, 347);
             this.tbContentTestVal.TabIndex = 24;
             this.tbContentTestVal.Text = "";
-            // 
-            // button8
-            // 
-            this.button8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button8.Location = new System.Drawing.Point(2121, 32);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(37, 23);
-            this.button8.TabIndex = 9;
-            this.button8.Text = "...";
-            this.button8.UseVisualStyleBackColor = true;
-            // 
-            // button9
-            // 
-            this.button9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.button9.Location = new System.Drawing.Point(3844, 22);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(37, 23);
-            this.button9.TabIndex = 0;
-            this.button9.Text = "...";
-            this.button9.UseVisualStyleBackColor = true;
             // 
             // gbTestFile
             // 
@@ -1129,7 +1113,7 @@
             this.gbTestFile.Controls.Add(this.btnTestFileKappa);
             this.gbTestFile.Controls.Add(this.button7);
             this.gbTestFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gbTestFile.Location = new System.Drawing.Point(6, 108);
+            this.gbTestFile.Location = new System.Drawing.Point(6, 107);
             this.gbTestFile.Name = "gbTestFile";
             this.gbTestFile.Size = new System.Drawing.Size(1056, 626);
             this.gbTestFile.TabIndex = 34;
@@ -1217,7 +1201,7 @@
             // 
             this.rbTestVal.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.rbTestVal.AutoSize = true;
-            this.rbTestVal.Location = new System.Drawing.Point(716, 12);
+            this.rbTestVal.Location = new System.Drawing.Point(716, 11);
             this.rbTestVal.Name = "rbTestVal";
             this.rbTestVal.Size = new System.Drawing.Size(45, 19);
             this.rbTestVal.TabIndex = 35;
@@ -1229,12 +1213,13 @@
             // 
             this.rbKappa.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.rbKappa.AutoSize = true;
-            this.rbKappa.Location = new System.Drawing.Point(815, 12);
+            this.rbKappa.Location = new System.Drawing.Point(815, 11);
             this.rbKappa.Name = "rbKappa";
             this.rbKappa.Size = new System.Drawing.Size(58, 19);
             this.rbKappa.TabIndex = 33;
             this.rbKappa.Text = "Kappa";
             this.rbKappa.UseVisualStyleBackColor = true;
+            this.rbKappa.Visible = false;
             this.rbKappa.Click += new System.EventHandler(this.rbKappa_Click);
             // 
             // rbKfold
@@ -1242,7 +1227,7 @@
             this.rbKfold.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.rbKfold.AutoSize = true;
             this.rbKfold.Checked = true;
-            this.rbKfold.Location = new System.Drawing.Point(932, 12);
+            this.rbKfold.Location = new System.Drawing.Point(932, 11);
             this.rbKfold.Name = "rbKfold";
             this.rbKfold.Size = new System.Drawing.Size(115, 19);
             this.rbKfold.TabIndex = 32;
@@ -1254,7 +1239,7 @@
             // btnStartValidation
             // 
             this.btnStartValidation.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnStartValidation.Location = new System.Drawing.Point(475, 72);
+            this.btnStartValidation.Location = new System.Drawing.Point(475, 71);
             this.btnStartValidation.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnStartValidation.Name = "btnStartValidation";
             this.btnStartValidation.Size = new System.Drawing.Size(82, 22);
@@ -1281,7 +1266,7 @@
             this.gbKFold.Controls.Add(this.label10);
             this.gbKFold.Controls.Add(this.labelPerformance1);
             this.gbKFold.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.gbKFold.Location = new System.Drawing.Point(4, 108);
+            this.gbKFold.Location = new System.Drawing.Point(4, 107);
             this.gbKFold.Name = "gbKFold";
             this.gbKFold.Size = new System.Drawing.Size(1057, 626);
             this.gbKFold.TabIndex = 30;
@@ -1423,7 +1408,7 @@
             // 
             this.cbCategoryValidation.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.cbCategoryValidation.FormattingEnabled = true;
-            this.cbCategoryValidation.Location = new System.Drawing.Point(210, 12);
+            this.cbCategoryValidation.Location = new System.Drawing.Point(210, 11);
             this.cbCategoryValidation.Name = "cbCategoryValidation";
             this.cbCategoryValidation.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.cbCategoryValidation.Size = new System.Drawing.Size(310, 23);
@@ -1434,7 +1419,7 @@
             // 
             this.Category.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.Category.AutoSize = true;
-            this.Category.Location = new System.Drawing.Point(146, 16);
+            this.Category.Location = new System.Drawing.Point(146, 15);
             this.Category.Name = "Category";
             this.Category.Size = new System.Drawing.Size(58, 15);
             this.Category.TabIndex = 28;
@@ -1448,7 +1433,7 @@
             this.tabEdit.Location = new System.Drawing.Point(4, 24);
             this.tabEdit.Name = "tabEdit";
             this.tabEdit.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEdit.Size = new System.Drawing.Size(1063, 756);
+            this.tabEdit.Size = new System.Drawing.Size(1063, 699);
             this.tabEdit.TabIndex = 3;
             this.tabEdit.Text = "Edit";
             // 
@@ -1466,9 +1451,9 @@
             this.gbResultSearch.Controls.Add(this.label22);
             this.gbResultSearch.Controls.Add(this.tbBookNameEditRes);
             this.gbResultSearch.Enabled = false;
-            this.gbResultSearch.Location = new System.Drawing.Point(7, 265);
+            this.gbResultSearch.Location = new System.Drawing.Point(9, 245);
             this.gbResultSearch.Name = "gbResultSearch";
-            this.gbResultSearch.Size = new System.Drawing.Size(1050, 491);
+            this.gbResultSearch.Size = new System.Drawing.Size(1050, 406);
             this.gbResultSearch.TabIndex = 33;
             this.gbResultSearch.TabStop = false;
             this.gbResultSearch.Text = "Result";
@@ -1507,7 +1492,7 @@
             this.tbContentEditReult.Location = new System.Drawing.Point(7, 137);
             this.tbContentEditReult.Name = "tbContentEditReult";
             this.tbContentEditReult.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.tbContentEditReult.Size = new System.Drawing.Size(1037, 252);
+            this.tbContentEditReult.Size = new System.Drawing.Size(1037, 235);
             this.tbContentEditReult.TabIndex = 45;
             this.tbContentEditReult.Text = "";
             // 
@@ -1576,7 +1561,7 @@
             this.groupBox5.Controls.Add(this.label17);
             this.groupBox5.Controls.Add(this.cbCategoryEdit);
             this.groupBox5.Controls.Add(this.label16);
-            this.groupBox5.Location = new System.Drawing.Point(6, 6);
+            this.groupBox5.Location = new System.Drawing.Point(7, 3);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(1051, 236);
             this.groupBox5.TabIndex = 32;
@@ -1673,18 +1658,185 @@
             this.label16.TabIndex = 30;
             this.label16.Text = "Category:";
             // 
+            // text
+            // 
+            this.text.BackColor = System.Drawing.Color.AliceBlue;
+            this.text.Controls.Add(this.btnPrevTermAnal);
+            this.text.Controls.Add(this.btnNextTermAnal);
+            this.text.Controls.Add(this.label7);
+            this.text.Controls.Add(this.tbContentTermAnal);
+            this.text.Controls.Add(this.groupBox9);
+            this.text.Controls.Add(this.groupBox8);
+            this.text.Location = new System.Drawing.Point(4, 24);
+            this.text.Name = "text";
+            this.text.Padding = new System.Windows.Forms.Padding(3);
+            this.text.Size = new System.Drawing.Size(1063, 699);
+            this.text.TabIndex = 4;
+            this.text.Text = "TermAnalysis";
+            // 
+            // btnPrevTermAnal
+            // 
+            this.btnPrevTermAnal.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnPrevTermAnal.Location = new System.Drawing.Point(588, 632);
+            this.btnPrevTermAnal.Name = "btnPrevTermAnal";
+            this.btnPrevTermAnal.Size = new System.Drawing.Size(75, 23);
+            this.btnPrevTermAnal.TabIndex = 38;
+            this.btnPrevTermAnal.Text = "<";
+            this.toolTip1.SetToolTip(this.btnPrevTermAnal, "Previous");
+            this.btnPrevTermAnal.UseVisualStyleBackColor = true;
+            this.btnPrevTermAnal.Click += new System.EventHandler(this.btnPrevTermAnal_Click);
+            // 
+            // btnNextTermAnal
+            // 
+            this.btnNextTermAnal.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnNextTermAnal.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.btnNextTermAnal.Location = new System.Drawing.Point(669, 632);
+            this.btnNextTermAnal.Name = "btnNextTermAnal";
+            this.btnNextTermAnal.Size = new System.Drawing.Size(75, 23);
+            this.btnNextTermAnal.TabIndex = 37;
+            this.btnNextTermAnal.Text = ">";
+            this.toolTip1.SetToolTip(this.btnNextTermAnal, "Next");
+            this.btnNextTermAnal.UseVisualStyleBackColor = false;
+            this.btnNextTermAnal.Click += new System.EventHandler(this.btnNextTermAnal_Click);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(303, 171);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(53, 15);
+            this.label7.TabIndex = 36;
+            this.label7.Text = "Content:";
+            // 
+            // tbContentTermAnal
+            // 
+            this.tbContentTermAnal.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbContentTermAnal.Location = new System.Drawing.Point(303, 189);
+            this.tbContentTermAnal.Name = "tbContentTermAnal";
+            this.tbContentTermAnal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.tbContentTermAnal.Size = new System.Drawing.Size(744, 410);
+            this.tbContentTermAnal.TabIndex = 35;
+            this.tbContentTermAnal.Text = "";
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.lbTopicsTermAnal);
+            this.groupBox9.Location = new System.Drawing.Point(14, 171);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(254, 436);
+            this.groupBox9.TabIndex = 34;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Topics";
+            // 
+            // lbTopicsTermAnal
+            // 
+            this.lbTopicsTermAnal.FormattingEnabled = true;
+            this.lbTopicsTermAnal.ItemHeight = 15;
+            this.lbTopicsTermAnal.Location = new System.Drawing.Point(7, 19);
+            this.lbTopicsTermAnal.Name = "lbTopicsTermAnal";
+            this.lbTopicsTermAnal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.lbTopicsTermAnal.Size = new System.Drawing.Size(241, 409);
+            this.lbTopicsTermAnal.TabIndex = 0;
+            this.lbTopicsTermAnal.SelectedIndexChanged += new System.EventHandler(this.lbTopicsTermAnal_SelectedIndexChanged);
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.groupBox8.Controls.Add(this.tbSearchTermAnal);
+            this.groupBox8.Controls.Add(this.label6);
+            this.groupBox8.Controls.Add(this.btnStartTermAnal);
+            this.groupBox8.Controls.Add(this.cbBooknameTermAnal);
+            this.groupBox8.Controls.Add(this.label8);
+            this.groupBox8.Controls.Add(this.cbCategoryTermAnal);
+            this.groupBox8.Controls.Add(this.label9);
+            this.groupBox8.Location = new System.Drawing.Point(3, 6);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(1051, 150);
+            this.groupBox8.TabIndex = 33;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Search Information";
+            // 
+            // tbSearchTermAnal
+            // 
+            this.tbSearchTermAnal.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.tbSearchTermAnal.Location = new System.Drawing.Point(79, 65);
+            this.tbSearchTermAnal.Name = "tbSearchTermAnal";
+            this.tbSearchTermAnal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.tbSearchTermAnal.Size = new System.Drawing.Size(933, 27);
+            this.tbSearchTermAnal.TabIndex = 52;
+            this.tbSearchTermAnal.Text = "";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(20, 68);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(36, 15);
+            this.label6.TabIndex = 47;
+            this.label6.Text = "Term:";
+            // 
+            // btnStartTermAnal
+            // 
+            this.btnStartTermAnal.Location = new System.Drawing.Point(476, 121);
+            this.btnStartTermAnal.Name = "btnStartTermAnal";
+            this.btnStartTermAnal.Size = new System.Drawing.Size(75, 23);
+            this.btnStartTermAnal.TabIndex = 38;
+            this.btnStartTermAnal.Text = "Start";
+            this.btnStartTermAnal.UseVisualStyleBackColor = true;
+            this.btnStartTermAnal.Click += new System.EventHandler(this.btnStartTermAnal_Click);
+            // 
+            // cbBooknameTermAnal
+            // 
+            this.cbBooknameTermAnal.FormattingEnabled = true;
+            this.cbBooknameTermAnal.Location = new System.Drawing.Point(640, 22);
+            this.cbBooknameTermAnal.Name = "cbBooknameTermAnal";
+            this.cbBooknameTermAnal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.cbBooknameTermAnal.Size = new System.Drawing.Size(372, 23);
+            this.cbBooknameTermAnal.TabIndex = 33;
+            this.cbBooknameTermAnal.Click += new System.EventHandler(this.cbBooknameTermAnal_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(568, 25);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(69, 15);
+            this.label8.TabIndex = 32;
+            this.label8.Text = "BookName:";
+            // 
+            // cbCategoryTermAnal
+            // 
+            this.cbCategoryTermAnal.FormattingEnabled = true;
+            this.cbCategoryTermAnal.Location = new System.Drawing.Point(79, 21);
+            this.cbCategoryTermAnal.Name = "cbCategoryTermAnal";
+            this.cbCategoryTermAnal.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.cbCategoryTermAnal.Size = new System.Drawing.Size(373, 23);
+            this.cbCategoryTermAnal.TabIndex = 31;
+            this.cbCategoryTermAnal.SelectedIndexChanged += new System.EventHandler(this.cbCategoryTermAnal_SelectedIndexChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(11, 24);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(58, 15);
+            this.label9.TabIndex = 30;
+            this.label9.Text = "Category:";
+            // 
             // Book_Analysis
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(1078, 849);
+            this.ClientSize = new System.Drawing.Size(1076, 791);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.tabSelector);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MaximumSize = new System.Drawing.Size(1094, 888);
+            this.MaximumSize = new System.Drawing.Size(1094, 886);
             this.Name = "Book_Analysis";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Book Analysis";
@@ -1724,6 +1876,11 @@
             this.gbResultSearch.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
+            this.text.ResumeLayout(false);
+            this.text.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1748,7 +1905,6 @@
         private TabPage tabEdit;
         private GroupBox gbAnalysisLearn;
         private Label labelytyt;
-        private Button button1;
         private Label labelcca;
         private DateTimePicker dtpPublishDateLearn;
         private GroupBox gbKFold;
@@ -1855,12 +2011,25 @@
         private Label label29;
         private Label label28;
         private RichTextBox tbContentTestVal;
-        private Button button8;
-        private Button button9;
         private TextBox tbTopicLearn;
         private ListBox lbToicsLearn;
         private Label label5;
         private ListBox lbAllTopicsLearn;
         private ProgressBar pbAnalysis;
+        private TabPage text;
+        private GroupBox groupBox8;
+        private RichTextBox tbSearchTermAnal;
+        private Label label6;
+        private Button btnStartTermAnal;
+        private ComboBox cbBooknameTermAnal;
+        private Label label8;
+        private ComboBox cbCategoryTermAnal;
+        private Label label9;
+        private Button btnPrevTermAnal;
+        private Button btnNextTermAnal;
+        private Label label7;
+        private RichTextBox tbContentTermAnal;
+        private GroupBox groupBox9;
+        private ListBox lbTopicsTermAnal;
     }
 }
